@@ -1,0 +1,13 @@
+.oc-icon {
+  height: 40px;
+  width: 40px;
+  margin-top: 3px;
+  margin-left: 15px;
+}
+/* 画像ボタン */
+.img-button:hover {
+  cursor: pointer;
+  filter: alpha(opacity=60);
+  opacity: 0.6;
+  zoom: 1;
+}

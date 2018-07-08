@@ -1,0 +1,30 @@
+<div class="workspace">
+  <a (click)="openWorkSpace()">open work space</a>
+</div>
+
+<ng-template #rowsTemplate let-rows>
+  <ng-container *ngFor="let row of rows">
+    <ng-container *ngIf="row.isDirectory">
+      <div class="line" (click)="folerOnOff(row)" [style.padding-left]="10 * row.depth + 'px'">
+        <img *ngIf="!row.opened" src="assets/tree-icon/baseline-folder-24px.svg" />
+        <img *ngIf="row.opened" src="assets/tree-icon/baseline-folder_open-24px.svg" />
+        <span class="name">{{row.name}}</span>
+      </div>
+      <ng-container *ngIf="row.opened">
+        <ng-container *ngTemplateOutlet="rowsTemplate; context: {$implicit: row.childTree}"></ng-container>
+      </ng-container>
+    </ng-container>
+    <ng-container *ngIf="!row.isDirectory">
+      <div class="line" (click)="openFile(row)" [style.color]="isActive(row) ? 'red': ''" [style.padding-left]="10 * row.depth + 'px'">
+        <img [src]="getFileIcon(row)" />
+        <span class="name">{{row.name}}</span>
+      </div>
+    </ng-container>
+  </ng-container>
+</ng-template>
+
+<div class="css-treeview">
+  <ng-container *ngIf="treeExplorer">
+    <ng-container *ngTemplateOutlet="rowsTemplate; context: {$implicit: treeExplorer.childTree}"></ng-container>
+  </ng-container>
+</div>

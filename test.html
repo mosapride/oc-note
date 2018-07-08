@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title></title>
+  <meta charset="utf-8">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="">
+  <!--[if lt IE 9]>
+<script src="//cdn.jsdelivr.net/html5shiv/3.7.2/html5shiv.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+  <link rel="shortcut icon" href="">
+  <style>
+    /* .app-row {
+      display: block;
+    } */
+
+
+
+    .section-top {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 50px;
+      background-color: hotpink;
+    }
+
+    .section-explorer {
+      position: fixed;
+      top: 50px;
+      left: 0;
+      bottom: 0;
+      width: 250px;
+      overflow-y: auto;
+    }
+
+    /* エクスプローラーは横軸のスクロールを有効にするためにmax-widthの指定が必要 */
+
+    .section-explorer-scroll-width {
+      width: auto;
+      max-width: 800px;
+    }
+
+    /* エクスプローラーを横スクロールを有効にするために改行を許可しない */
+
+    .section-explorer-scroll-width>* {
+      white-space: nowrap;
+    }
+
+    .section-main {
+      position: fixed;
+      display: inline;
+      top: 50px;
+      left: 250px;
+      right: 0;
+      bottom: 0;
+      background-color: aquamarine;
+      overflow-y: unset;
+    }
+
+    .markdown {
+      width: 50%;
+      height: 100%;
+      background-color: bisque;
+      overflow-y: auto;
+    }
+
+    .viewer {
+      position: absolute;
+      left: 50%;
+      top: 0;
+      height: 100%;
+      width: 50%;
+      background-color: rgba(0,0,255,0.3);
+      overflow-y: auto;
+    }
+
+    .resize-bar {
+      position: absolute;
+      top: 0;
+      width: 10px;
+      bottom: 0;
+      /* background-color: rgba(255,255,255,0); */
+      background-color: rgba(255, 0, 0, 0.5);
+      z-index : 100;
+    }
+
+    .resize-bar:hover {
+      cursor: w-resize;
+    }
+
+
+    .oc-icon {
+      height: 40px;
+      width: 40px;
+      margin-top: 3px;
+      margin-left: 15px;
+    }
+
+    /* 画像ボタン */
+
+    .img-button:hover {
+      cursor: pointer;
+      filter: alpha(opacity=60);
+      opacity: 0.6;
+      zoom: 1;
+    }
+
+
+
+    /* width */
+
+    ::-webkit-scrollbar {
+      width: 12px;
+      height: 12px;
+    }
+
+    /* Track */
+
+    ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+
+    /* Handle */
+
+    ::-webkit-scrollbar-thumb {
+      background: rgba(0, 0, 0, 0.1);
+    }
+
+    /* Handle on hover */
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(0, 0, 0, 0.3);
+    }
+
+  </style>
+</head>
+
+<body>
+  <div class="section-top">
+    <img src="./oc-note.svg" class="oc-icon img-button" /> top
+  </div>
+
+  <div class="section-explorer">
+    <div class="section-explorer-scroll-width">
+      <div>あああああああああああああああああああああああああい</div>
+      <div>EditorEditor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor</div>
+      <div>EditorEditor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor</div>
+      <div>EditorEditor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor</div>
+      <div>EditorEditor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor</div>
+      <div>EditorEditor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor</div>
+      <div>EditorEditor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor</div>
+      <div>EditorEditor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor</div>
+      <div>EditorEditor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor</div>
+      <div>EditorEditor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor</div>
+      <div>EditorEditor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor</div>
+      <div>EditorEditor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor</div>
+      <div>EditorEditor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor</div>
+      <div>EditorEditor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor</div>
+      <div>EditorEditor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor</div>
+      <div>EditorEditor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor</div>
+      <div>EditorEditor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor</div>
+      <div>EditorEditor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor</div>
+      <div>XXXXXXXXXXXX</div>
+    </div>
+
+  </div>
+  <div class="section-main">
+    <div class="markdown">
+      <div class="resize-bar"></div>
+
+      <div>EditorEditor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor</div>
+      <div>EditorEditor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor</div>
+      <div>EditorEditor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor EditorXXXXX</div>
+
+
+    </div>
+    <div class="viewer">
+      <div class="resize-bar"></div>
+      <div>Viewer</div>
+      <div>EditorEditor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor</div>
+      <div>EditorEditor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor</div>
+      <div>EditorEditor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor</div>
+      <div>EditorEditor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor</div>
+      <div>EditorEditor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor Editor</div>
+    </div>
+
+  </div>
+</body>
+
+</html>

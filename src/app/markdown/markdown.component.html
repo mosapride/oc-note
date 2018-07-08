@@ -1,0 +1,7 @@
+<div #repletion>folder
+  <select (change)="changeHightTheme($event)">
+    <option *ngFor="let theme of hightlightTheme" [value]="theme">{{theme}}</option>
+  </select>
+  <button (click)='test()'>debug</button>
+</div>
+<textarea #codemirror  (drop)="test($event)"></textarea>
