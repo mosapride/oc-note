@@ -12,7 +12,7 @@ import { ElectronService } from '../providers/electron.service';
 })
 export class ViewerComponent implements OnInit, AfterContentInit {
 
-  markdown: string;
+  markdown = '';
   public markRender = new marked.Renderer();
   public fileManager: FileManager;
   public selectFileInfo: SelectFileInfo;
@@ -92,9 +92,9 @@ export class ViewerComponent implements OnInit, AfterContentInit {
 
     this.markRender.link = (href: string, title: string, text: string): string => {
       if (href.match(/^http/) || href.match('//')) {
-        return `<a href="${href}" target="_blank" title="${title}">${text}</a>`;
+        return `<a href="${href}" title="${href}" alt="${href}" target="_blank" title="${title}">${text}</a>`;
       }
-      return `<a title="${title}" data-inLink="${href}">${text}</a>`;
+      return `<a href="javascript:void(0)" title="${href}" alt="${href}" data-inLink="${href}">${text}</a>`;
     };
 
     this.markOtion.renderer = this.markRender;
