@@ -31,10 +31,46 @@ export class TreeViewComponent implements OnInit {
   ngOnInit() {
     this.shareDataService.selectFileInfo$.subscribe(
       selectFileInfo => {
-        // this.activeFile = selectFileInfo.getFullPathFilename();
         this.selectFileInfo = selectFileInfo;
+        this.openFolder(this.selectFileInfo.path);
       }
     );
+  }
+
+  private openFolder(path: string): void {
+    if (this.treeExplorer.workDirectory === path) {
+      return;
+    }
+    const paths = this._getPathPttern(path);
+    this._openFolder(this.treeExplorer.childTree, paths);
+  }
+
+  private _getPathPttern(path: string): string[] {
+    const pathPatern: string[] = [];
+    path = path.replace(this.treeExplorer.workDirectory, '');
+    const paths = path.split(/\\|\//);
+    let wk = '';
+    for (const p of paths) {
+      wk += p;
+      pathPatern.push(wk);
+    }
+    return pathPatern;
+  }
+
+  private _openFolder(treeFiles: TreeFiles[], paths: string[]) {
+    for (const treeFile of treeFiles) {
+      if (!treeFile.isDirectory) {
+        continue;
+      }
+      let wk = treeFile.path.replace(this.treeExplorer.workDirectory, '');
+      wk = wk.replace(/\\|\//g, '') + treeFile.name;
+      for (const path of paths) {
+        if (path === wk) {
+          treeFile.opened = true;
+        }
+        this._openFolder(treeFile.childTree, paths);
+      }
+    }
   }
 
 
