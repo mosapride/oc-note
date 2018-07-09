@@ -97,6 +97,16 @@ export class ViewerComponent implements OnInit, AfterContentInit {
       return `<a href="javascript:void(0)" title="${href}" alt="${href}" data-inLink="${href}">${text}</a>`;
     };
 
+    this.markRender.image = (href: string, title: string, text: string): string => {
+      if (href.match(/^http/) || href.match('//')) {
+        return `<image src="${href}" alt="${text}" title="${title}" />`;
+      }
+      if (this.selectFileInfo.pathSep === '\\') {
+        href = href.replace(/\//, '\\');
+      }
+      return `<image src="${this.selectFileInfo.path + this.selectFileInfo.pathSep + href}" alt="${text}" title="${title}" />`;
+    };
+
     this.markOtion.renderer = this.markRender;
   }
 

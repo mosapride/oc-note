@@ -39,44 +39,22 @@ export class MarkdownComponent implements AfterContentInit, OnDestroy {
     this.instance.setSize('100%', `calc(100% - ${this.repletion.nativeElement.clientHeight}px)`);
     this.instance.on('change', (instance) => this.onChangeTextArea());
     this.instance.on('drop', (instance, event) => {
-      console.log(`drop event`);
-      console.log(instance);
-      console.log(event);
-      console.log(event.dataTransfer.files[0].path);
       const imageFile: { name: string, path: string } = { name: '', path: '' };
       try {
         if (event.dataTransfer.files[0].type.match(/png|gif|jpeg|jpg|bmp/)) {
           imageFile.name = event.dataTransfer.files[0].name;
           imageFile.path = event.dataTransfer.files[0].path;
+          this.fileManager.copy(imageFile.path, this.selectFileInfo.path + this.selectFileInfo.pathSep + imageFile.name, () => {
+            this.onChangeTextArea();
+            this.updateCodeMirror(instance, `![${imageFile.name}](./${imageFile.name})`);
+          });
         }
       } catch (e) {
         return;
       }
       console.log(imageFile);
-      this.updateCodeMirror(instance, 'testtt');
 
     });
-    // this.instance.on('dragstart', (instance, event) => {
-    //   console.log(`dragstart event`);
-    //   console.log(instance);
-    //   console.log(event);
-    // });
-    // this.instance.on('dragenter', (instance, event) => {
-    //   console.log(`dragenter event`);
-    //   console.log(instance);
-    //   console.log(event);
-    // });
-    // this.instance.on('dragover', (instance, event) => {
-    //   console.log(`dragover event`);
-    //   console.log(instance);
-    //   console.log(event);
-    // });
-    // this.instance.on('dragleave', (instance, event) => {
-    //   console.log(`dragleave event`);
-    //   console.log(instance);
-    //   console.log(event);
-    // });
-
 
 
     this.subscription = this.shareDataService.markdownData$.subscribe(
@@ -106,7 +84,7 @@ export class MarkdownComponent implements AfterContentInit, OnDestroy {
       line: cursor.line,
       ch: line.length - 1 // set the character position to the end of the line
     };
-    doc.replaceRange('\n' + data , pos); // adds a new line
+    doc.replaceRange('\n' + data, pos); // adds a new line
   }
 
   ngOnDestroy() {
