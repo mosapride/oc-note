@@ -137,11 +137,16 @@ export class FileManager {
     });
   }
 
-  public copy(src: string, dest: string, callback: { endCall(): void; }): void {
-    this.fs.copyFile(src, dest
+  public copy(src: string, dest: string, callback: () => void): void {
+    if (this.isStatFile(dest)) {
+      callback();
+      return;
+    }
+
+    this.fs.copyFile(src, dest, this.fs.constants.COPYFILE_EXCL
       , (err) => {
         if (err) { throw err; }
-        callback.endCall();
+        callback();
       });
   }
 
