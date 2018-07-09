@@ -60,6 +60,7 @@ export class MarkdownComponent implements AfterContentInit, OnDestroy {
     this.subscription = this.shareDataService.markdownData$.subscribe(
       markdown => {
         this.markdown = markdown;
+
       }
     );
 
@@ -70,6 +71,7 @@ export class MarkdownComponent implements AfterContentInit, OnDestroy {
         console.log(this.selectFileInfo);
         this.markdown = this.fileManager.fileRead(this.selectFileInfo.getFullPathFilename());
         this.instance.setValue(this.markdown);
+        this.instance.getDoc().clearHistory();
       }
     );
 
