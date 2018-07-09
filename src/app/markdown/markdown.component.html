@@ -2,6 +2,9 @@
   <select (change)="changeHightTheme($event)">
     <option *ngFor="let theme of hightlightTheme" [value]="theme">{{theme}}</option>
   </select>
-  <button (click)='test()'>debug</button>
+  <h2>Setting</h2>
+  <div>lightbox</div>
+
+
 </div>
 <textarea #codemirror  (drop)="test($event)"></textarea>

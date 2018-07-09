@@ -98,13 +98,27 @@ export class ViewerComponent implements OnInit, AfterContentInit {
     };
 
     this.markRender.image = (href: string, title: string, text: string): string => {
+      let optionCode = '';
+      const option = href.replace(/^.*#/, '');
+      if (option.match(/^[0-9]+$/)) {
+        optionCode = option;
+      }
+
       if (href.match(/^http/) || href.match('//')) {
-        return `<image src="${href}" alt="${text}" title="${title}" />`;
+        if (optionCode !== '') {
+          return `<image src="${href}" alt="${text}" />`;
+        }
+        return `<a href="${href}" data-lightbox="${text}"><img src="${href}" style="width : ${optionCode} px"></a>`;
       }
       if (this.selectFileInfo.pathSep === '\\') {
         href = href.replace(/\//, '\\');
       }
-      return `<image src="${this.selectFileInfo.path + this.selectFileInfo.pathSep + href}" alt="${text}" title="${title}" />`;
+
+      if (optionCode !== '') {
+        // tslint:disable-next-line:max-line-length
+        return `<a href="${this.selectFileInfo.path + this.selectFileInfo.pathSep + href}" data-lightbox="${text}"><image src="${this.selectFileInfo.path + this.selectFileInfo.pathSep + href}" alt="${text}"  style="width : ${optionCode}px" /></a>`;
+      }
+      return `<image src="${this.selectFileInfo.path + this.selectFileInfo.pathSep + href}" alt="${text}" />`;
     };
 
     this.markOtion.renderer = this.markRender;
