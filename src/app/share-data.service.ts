@@ -78,7 +78,7 @@ export class SelectFileInfo {
       }
       if (f === '..') {
         wklist.pop();
-        return;
+        continue;
       }
       wklist.push(f);
     }
