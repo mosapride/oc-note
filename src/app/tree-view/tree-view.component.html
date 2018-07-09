@@ -15,7 +15,7 @@
       </ng-container>
     </ng-container>
     <ng-container *ngIf="!row.isDirectory">
-      <div class="line" (click)="openFile(row)" [style.color]="isActive(row) ? 'red': ''" [style.padding-left]="10 * row.depth + 'px'">
+      <div class="line" (click)="openFile(row)" [class.active]="isActive(row)" [style.padding-left]="10 * row.depth + 'px'">
         <img [src]="getFileIcon(row)" />
         <span class="name">{{row.name}}</span>
       </div>
