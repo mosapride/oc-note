@@ -1,21 +1,25 @@
-import { Component, OnInit, AfterContentInit, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener, ViewChild, ElementRef } from '@angular/core';
 import { ShareDataService, SelectFileInfo } from '../share-data.service';
 import * as marked from 'marked';
 import * as hljs from 'highlight.js';
 import { FileManager } from '../file-manager';
 import { ElectronService } from '../providers/electron.service';
+import { ViewerHistory } from './viewer-history';
 
 @Component({
   selector: 'app-viewer',
   templateUrl: './viewer.component.html',
   styleUrls: ['./viewer.component.scss']
 })
-export class ViewerComponent implements OnInit, AfterContentInit {
-
+export class ViewerComponent implements OnInit {
+  @ViewChild('menu') menu: ElementRef;
+  @ViewChild('contents') contents: ElementRef;
   markdown = '';
   public markRender = new marked.Renderer();
   public fileManager: FileManager;
   public selectFileInfo: SelectFileInfo;
+  public history: ViewerHistory;
+
   public markOtion: marked.MarkedOptions = {
     highlight: function (str, lang) {
       let head = '<pre class="hljs highlight-padding"><code class="highlight-padding">';
@@ -60,20 +64,22 @@ export class ViewerComponent implements OnInit, AfterContentInit {
    * @memberof ViewerComponent
    */
   @HostListener('click', ['$event']) onclick(event) {
-    let markfile = '';
+    let href = '';
     try {
-      markfile = event.target.dataset.inlink;
-      if (!markfile) {
+      href = event.target.dataset.inlink;
+      if (!href) {
+        href = event.target.dataset.outerlink;
+        this.es.shell.openExternal(href);
         return;
       }
-      markfile = markfile.replace(/\//g, this.selectFileInfo.pathSep);
-      markfile = this.selectFileInfo.path + this.selectFileInfo.pathSep + markfile;
-      if (!this.fileManager.isStatFile(markfile)) {
+      href = href.replace(/\//g, this.selectFileInfo.pathSep);
+      href = this.selectFileInfo.path + this.selectFileInfo.pathSep + href;
+      if (!this.fileManager.isStatFile(href)) {
         window.alert(`not found.\n${event.target.dataset.inlink}`);
         return;
       }
       const selectFileInfo = new SelectFileInfo();
-      selectFileInfo.customConstractor(markfile, this.selectFileInfo.pathSep);
+      selectFileInfo.customConstractor(href, this.selectFileInfo.pathSep);
       this.shareDataService.onNotifySelectFileInfoChanged(selectFileInfo);
     } catch (e) {
       return;
@@ -83,6 +89,7 @@ export class ViewerComponent implements OnInit, AfterContentInit {
   constructor(public es: ElectronService, public shareDataService: ShareDataService) {
 
     this.fileManager = new FileManager(es);
+    this.history = new ViewerHistory(shareDataService);
 
     this.markRender.heading = (text: string, level: number, raw: string): string => {
       const buffer = new Buffer(text);
@@ -90,13 +97,21 @@ export class ViewerComponent implements OnInit, AfterContentInit {
       return `<h${level} id='${id}'>${text}</h${level}>\n`;
     };
 
+    // linkが内部リンクの場合はa href機能を動作させず、clickイベントで処理させる。
     this.markRender.link = (href: string, title: string, text: string): string => {
       if (href.match(/^http/) || href.match('//')) {
-        return `<a href="${href}" title="${href}" alt="${href}" target="_blank" title="${title}">${text}</a>`;
+        return `<a href="javascript:void(0)" title="${href}" alt="${href}" data-outerLink="${href}" target="_blank" class="outer-link" title="${title}">${text}</a>`;
       }
-      return `<a href="javascript:void(0)" title="${href}" alt="${href}" data-inLink="${href}">${text}</a>`;
+      let cssClazzName = 'internal-link';
+      let markfile = href.replace(/\//g, this.selectFileInfo.pathSep);
+      markfile = this.selectFileInfo.path + this.selectFileInfo.pathSep + markfile;
+      if (!this.fileManager.isStatFile(markfile)) {
+        cssClazzName += ' no-link';
+      }
+      return `<a href="javascript:void(0)" title="${href}" alt="${href}" data-inLink="${href}" class="${cssClazzName}">${text}</a>`;
     };
 
+    // imageタグの場合末尾に#数値がある場合はlightboxとして表示する。
     this.markRender.image = (href: string, title: string, text: string): string => {
       let optionCode = '';
       const option = href.replace(/^.*#/, '');
@@ -125,20 +140,40 @@ export class ViewerComponent implements OnInit, AfterContentInit {
   }
 
   ngOnInit() {
-
-  }
-
-  ngAfterContentInit() {
+    this.shareDataService.selectFileInfo$.subscribe(
+      selectFileInfo => {
+        this.selectFileInfo = selectFileInfo;
+        this.history.add(this.selectFileInfo);
+      }
+    );
     this.shareDataService.markdownData$.subscribe(
       markdown => {
         this.markdown = marked(markdown, this.markOtion);
       }
     );
-    this.shareDataService.selectFileInfo$.subscribe(
-      selectFileInfo => {
-        this.selectFileInfo = selectFileInfo;
-      }
-    );
+
+
+  }
+
+
+  canHistoryGo(): boolean {
+    return this.history.canHistoryGo();
+  }
+
+  canHistoryBack(): boolean {
+    return this.history.canHistoryBack();
+  }
+
+  doHistoryBack(): void {
+    if (this.canHistoryBack()) {
+      this.history.doHistoryBack();
+    }
+  }
+
+  doHistoryGo(): void {
+    if (this.canHistoryGo()) {
+      this.history.doHistoryGo();
+    }
   }
 }
 

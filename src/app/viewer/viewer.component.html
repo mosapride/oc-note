@@ -1,2 +1,6 @@
-<div [innerHTML]='markdown | noSanitize'>
+<div class="menu" #menu>
+  <img src="assets/left.svg" class="icon" [class.disable]="!canHistoryBack()" (click)="doHistoryBack()">
+  <img src="assets/right.svg" class="icon" [class.disable]="!canHistoryGo()" (click)="doHistoryGo()">
+</div>
+<div #contents class="contents" [innerHTML]='markdown | noSanitize'>
 </div>
