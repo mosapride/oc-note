@@ -1,5 +1,9 @@
 <div class="workspace">
   <a (click)="openWorkSpace()">open work space</a>
+  <div>
+    <input type="text" placeholder="grep" [(ngModel)]="search" class="search" (keydown.enter)="doSearch()">
+  </div>
+
 </div>
 
 <ng-template #rowsTemplate let-rows>

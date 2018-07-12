@@ -7,6 +7,10 @@ export class FileManager {
   es: ElectronService;
   ipc: Electron.IpcRenderer;
   dialog: Electron.Dialog;
+  private fileList: string[];
+  private asyncfindAllStartTime: Date;
+  private asyncCallBackFlg: boolean;
+  private ASYNC_TIME_OUT_MS = 3000;
   dialogOption: OpenDialogOptions = {
     properties: ['openFile', 'openDirectory']
   };
@@ -78,15 +82,51 @@ export class FileManager {
     }
   }
 
+
+  grep(search: string, treeExplorer: TreeExplorer): string {
+    let rtnMarkDown = '';
+    this.fileList = [];
+    this._getFileList(treeExplorer.childTree);
+
+    for (const file of this.fileList) {
+      const fileContents = this.fileRead(file);
+      const lines = fileContents.split(/\r|\n|\r\n/);
+      for (let lineCount = 0; lineCount < lines.length; lineCount++) {
+        if (lines[lineCount].match(search)) {
+          let markF = file.replace(treeExplorer.workDirectory, '.');
+          markF = markF.replace(/\\/g, '/');
+          rtnMarkDown += `[${markF}](${markF}) \n\n`;
+          rtnMarkDown += lines[lineCount] + '\n\n---\n\n';
+        }
+      }
+    }
+    return rtnMarkDown;
+  }
+
+  private _getFileList(treeFiles: TreeFiles[]): void {
+    for (const tree of treeFiles) {
+      if (!tree.isDirectory) {
+        this.fileList.push(tree.path + '\\' + tree.name);
+      }
+      this._getFileList(tree.childTree);
+    }
+  }
+
+
+
   /**
    * `find .`のように末端ディレクトリまでのディレクトリ、ファイルを調べる。
    *
    * @param path find先のディレクトリ
    * @return Promise<TreeExplorer> ディレクトリ情報
    */
-  public asyncfindAll(dir: string): Promise<TreeExplorer> {
+  public asyncfindAll(dir: string, callback?: () => void): Promise<TreeExplorer> {
+    if (callback) {
+      this.asyncfindAllStartTime = new Date();
+      this.asyncCallBackFlg = false;
+    }
     this.treeExplorer = new TreeExplorer(dir);
-    return this._asyncfindAll(dir, this.treeExplorer.childTree);
+    return this._asyncfindAll(dir, this.treeExplorer.childTree, callback);
   }
 
   /**
@@ -95,13 +135,22 @@ export class FileManager {
    * @param path find先のディレクトリ
    * @param treeFiles 検索結果を格納するObject
    */
-  private async _asyncfindAll(path: string, treeFiles: TreeFiles[]): Promise<TreeExplorer> {
+  private async _asyncfindAll(path: string, treeFiles: TreeFiles[], callback?: () => void): Promise<TreeExplorer> {
     let rtn: TreeExplorer;
-    await this._promiseFindAll(path, treeFiles, 0).then(data => { rtn = data; });
+    await this._promiseFindAll(path, treeFiles, 0, callback).then(data => { rtn = data; });
     return rtn;
   }
 
-  private _promiseFindAll(path: string, treeFiles: TreeFiles[], depth: number) {
+  private _promiseFindAll(path: string, treeFiles: TreeFiles[], depth: number, callback?: () => void) {
+    if (callback) {
+      if ((new Date().getTime() - this.asyncfindAllStartTime.getTime()) >= this.ASYNC_TIME_OUT_MS) {
+        if (!this.asyncCallBackFlg) {
+          callback();
+          this.asyncCallBackFlg = true;
+        }
+        return;
+      }
+    }
     return new Promise<TreeExplorer>((resolve, reject) => {
       this.fs.readdir(path, (err, names) => {
         if (err) {
@@ -111,7 +160,7 @@ export class FileManager {
         for (const name of names) {
           if (this.fs.statSync(path + this.pathSep + name).isDirectory()) {
             treeFiles.push(new TreeFiles(path, name, depth + 1, true));
-            this._promiseFindAll(path + this.pathSep + name, treeFiles[counter].childTree, depth + 1);
+            this._promiseFindAll(path + this.pathSep + name, treeFiles[counter].childTree, depth + 1, callback);
           } else {
             treeFiles.push(new TreeFiles(path, name, depth + 1, false));
           }

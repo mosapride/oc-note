@@ -5,6 +5,7 @@ import { Subscription } from 'rxjs';
 import { Constant } from '../constant';
 import { FileManager } from '../file-manager';
 import { ElectronService } from '../providers/electron.service';
+import { sep } from 'path';
 declare var CodeMirror: typeof codetype;
 
 @Component({
@@ -44,7 +45,7 @@ export class MarkdownComponent implements AfterContentInit, OnDestroy {
         if (event.dataTransfer.files[0].type.match(/png|gif|jpeg|jpg|bmp/)) {
           imageFile.name = event.dataTransfer.files[0].name;
           imageFile.path = event.dataTransfer.files[0].path;
-          this.fileManager.copy(imageFile.path, this.selectFileInfo.path + this.selectFileInfo.pathSep + imageFile.name, () => {
+          this.fileManager.copy(imageFile.path, this.selectFileInfo.path + sep + imageFile.name, () => {
             this.onChangeTextArea();
             this.updateCodeMirror(instance, `![${imageFile.name}](./${imageFile.name})`);
           });
@@ -56,15 +57,12 @@ export class MarkdownComponent implements AfterContentInit, OnDestroy {
 
     });
 
-
-    this.subscription = this.shareDataService.markdownData$.subscribe(
-      markdown => {
-        this.markdown = markdown;
-      }
-    );
-
     this.shareDataService.selectFileInfo$.subscribe(
       selectFileInfo => {
+        if (selectFileInfo.grepFlg) {
+          this.instance.getDoc().clearHistory();
+          return;
+        }
         this.selectFileInfo = selectFileInfo;
         this.markdown = this.fileManager.fileRead(this.selectFileInfo.getFullPathFilename());
         this.instance.setValue(this.markdown);
@@ -74,7 +72,7 @@ export class MarkdownComponent implements AfterContentInit, OnDestroy {
 
   }
 
-  updateCodeMirror(code: any, data: string) {
+  private updateCodeMirror(code: any, data: string) {
     const cm = this.instance;
     const doc = cm.getDoc();
     const cursor = doc.getCursor(); // gets the line number in the cursor position

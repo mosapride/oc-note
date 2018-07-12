@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
+import { sep } from 'path';
 
 // https://qiita.com/ksh-fthr/items/e43dd37bff2e51e95a59
 
@@ -36,19 +37,16 @@ export class ShareDataService {
 export class SelectFileInfo {
   path: string;
   name: string;
-  pathSep: string;
   selectedFlg = false;
   changeFlg = false;
+  grepFlg = false;
 
-  constructor(path?: string, name?: string, pathSep?: string, selectedFlg?: boolean, changeFlg?: boolean) {
+  constructor(path?: string, name?: string,  selectedFlg?: boolean, changeFlg?: boolean) {
     if (path) {
       this.path = path;
     }
     if (name) {
       this.name = name;
-    }
-    if (pathSep) {
-      this.pathSep = pathSep;
     }
     if (selectedFlg) {
       this.selectedFlg = selectedFlg;
@@ -58,19 +56,22 @@ export class SelectFileInfo {
     }
   }
 
+  setGrepFlg(): void {
+    this.grepFlg = true;
+  }
+
   isChange(): boolean {
     return this.changeFlg;
   }
 
   getFullPathFilename(): string {
-    return (this.path + this.pathSep + this.name);
+    return (this.path + sep + this.name);
   }
 
-  customConstractor(fullpath: string, pathSep: string): void {
+  customConstractor(fullpath: string): void {
     this.path = '';
     this.name = '';
-    this.pathSep = pathSep;
-    const sfile = fullpath.split(pathSep);
+    const sfile = fullpath.split(sep);
     const wklist: string[] = [];
     for (const f of sfile) {
       if (f === '.') {
@@ -84,14 +85,11 @@ export class SelectFileInfo {
     }
 
     this.name = wklist.pop();
-    // for (const w of wklist) {
-    //   this.path += w + pathSep;
-    // }
 
     for (let i = 0; i < wklist.length; i++) {
       this.path += wklist[i];
       if (wklist.length !== (i + 1)) {
-        this.path += pathSep;
+        this.path += sep;
       }
     }
   }

@@ -3,8 +3,8 @@ import { ElectronService } from '../providers/electron.service';
 import { FileManager } from '../file-manager';
 import { TreeExplorer, TreeFiles } from '../tree-explorer';
 import { ShareDataService, SelectFileInfo } from '../share-data.service';
-import { SaveDialogOptions, MessageBoxOptions, MenuItem } from 'electron';
-import { Tree } from '@angular/router/src/utils/tree';
+import { MessageBoxOptions } from 'electron';
+import { sep } from 'path';
 
 @Component({
   selector: 'app-tree-view',
@@ -12,6 +12,7 @@ import { Tree } from '@angular/router/src/utils/tree';
   styleUrls: ['./tree-view.component.scss']
 })
 export class TreeViewComponent implements OnInit {
+  search = '';
   fileManager: FileManager;
   treeExplorer: TreeExplorer;
   selectFileInfo: SelectFileInfo;
@@ -81,6 +82,9 @@ export class TreeViewComponent implements OnInit {
     const dir = this.fileManager.selectFolder();
     this.fileManager.asyncfindAll(dir).then(folders => {
       this.treeExplorer = folders;
+      if (this.fileManager.isStatFile(folders.workDirectory + sep + 'style.css')) {
+        document.getElementById('cs_viewer')['href'] = `${folders.workDirectory}${sep}style.css`;
+      }
     });
   }
 
@@ -129,6 +133,7 @@ export class TreeViewComponent implements OnInit {
 
   openFile(tree: TreeFiles): void {
     if (!tree.name.match(/\.md$/)) {
+      this.es.shell.openItem(tree.path + sep + tree.name);
       return;
     }
 
@@ -154,8 +159,22 @@ export class TreeViewComponent implements OnInit {
 
   private _openFile(tree: TreeFiles) {
     // this.activeFile = tree.path + tree.name;
-    const selectFileInfo = new SelectFileInfo(tree.path, tree.name, this.fileManager.pathSep);
+    const selectFileInfo = new SelectFileInfo(tree.path, tree.name);
     this.shareDataService.onNotifySelectFileInfoChanged(selectFileInfo);
   }
 
+
+  doSearch() {
+    if (!this.treeExplorer) {
+      return;
+    }
+    if (this.search.length !== 0) {
+      const markdown = this.fileManager.grep(this.search, this.treeExplorer);
+      const selectFileInfo = new SelectFileInfo(this.treeExplorer.workDirectory, 'grep');
+      console.log(this.treeExplorer.workDirectory);
+      selectFileInfo.setGrepFlg();
+      this.shareDataService.onNotifySelectFileInfoChanged(selectFileInfo);
+      this.shareDataService.onNotifyMarkdownDataChanged(markdown);
+    }
+  }
 }

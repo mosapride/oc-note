@@ -5,6 +5,7 @@ import * as hljs from 'highlight.js';
 import { FileManager } from '../file-manager';
 import { ElectronService } from '../providers/electron.service';
 import { ViewerHistory } from './viewer-history';
+import { sep as sep } from 'path';
 
 @Component({
   selector: 'app-viewer',
@@ -15,10 +16,13 @@ export class ViewerComponent implements OnInit {
   @ViewChild('menu') menu: ElementRef;
   @ViewChild('contents') contents: ElementRef;
   markdown = '';
+  html = '';
   public markRender = new marked.Renderer();
   public fileManager: FileManager;
   public selectFileInfo: SelectFileInfo;
   public history: ViewerHistory;
+  public scrollDownFlg = false;
+  public search = '';
 
   public markOtion: marked.MarkedOptions = {
     highlight: function (str, lang) {
@@ -36,7 +40,6 @@ export class ViewerComponent implements OnInit {
                   str += wk[i] + '\n';
                 }
               }
-              // tslint:disable-next-line:max-line-length
               head += `<span class='highlight-title'>${title}</span>`;
             }
           }
@@ -72,14 +75,14 @@ export class ViewerComponent implements OnInit {
         this.es.shell.openExternal(href);
         return;
       }
-      href = href.replace(/\//g, this.selectFileInfo.pathSep);
-      href = this.selectFileInfo.path + this.selectFileInfo.pathSep + href;
+      href = href.replace(/\//g, sep);
+      href = this.selectFileInfo.path + sep + href;
       if (!this.fileManager.isStatFile(href)) {
         window.alert(`not found.\n${event.target.dataset.inlink}`);
         return;
       }
       const selectFileInfo = new SelectFileInfo();
-      selectFileInfo.customConstractor(href, this.selectFileInfo.pathSep);
+      selectFileInfo.customConstractor(href);
       this.shareDataService.onNotifySelectFileInfoChanged(selectFileInfo);
     } catch (e) {
       return;
@@ -103,8 +106,8 @@ export class ViewerComponent implements OnInit {
         return `<a href="javascript:void(0)" title="${href}" alt="${href}" data-outerLink="${href}" target="_blank" class="outer-link" title="${title}">${text}</a>`;
       }
       let cssClazzName = 'internal-link';
-      let markfile = href.replace(/\//g, this.selectFileInfo.pathSep);
-      markfile = this.selectFileInfo.path + this.selectFileInfo.pathSep + markfile;
+      let markfile = href.replace(/\//g, sep);
+      markfile = this.selectFileInfo.path + sep + markfile;
       if (!this.fileManager.isStatFile(markfile)) {
         cssClazzName += ' no-link';
       }
@@ -114,47 +117,70 @@ export class ViewerComponent implements OnInit {
     // imageタグの場合末尾に#数値がある場合はlightboxとして表示する。
     this.markRender.image = (href: string, title: string, text: string): string => {
       let optionCode = '';
-      const option = href.replace(/^.*#/, '');
+
+      if (text.length === 0) {
+        text = new Date().getTime() + '';
+      }
+
+      const option = href.replace(/^(.*)#/, '');
       if (option.match(/^[0-9]+$/)) {
         optionCode = option;
       }
 
       if (href.match(/^http/) || href.match('//')) {
         if (optionCode !== '') {
-          return `<image src="${href}" alt="${text}" />`;
+          return `<a href="${href}" data-lightbox="${text}"><img src="${href}" style="width : ${optionCode}px"></a>`;
         }
-        return `<a href="${href}" data-lightbox="${text}"><img src="${href}" style="width : ${optionCode} px"></a>`;
+        return `<image src="${href}" alt="${text}" />`;
       }
-      if (this.selectFileInfo.pathSep === '\\') {
+      if (sep === '\\') {
         href = href.replace(/\//, '\\');
       }
 
       if (optionCode !== '') {
         // tslint:disable-next-line:max-line-length
-        return `<a href="${this.selectFileInfo.path + this.selectFileInfo.pathSep + href}" data-lightbox="${text}"><image src="${this.selectFileInfo.path + this.selectFileInfo.pathSep + href}" alt="${text}"  style="width : ${optionCode}px" /></a>`;
+        return `<a href="${this.selectFileInfo.path + sep + href}" data-lightbox="${text}"><image src="${this.selectFileInfo.path + sep + href}" alt="${text}"  style="width : ${optionCode}px" /></a>`;
       }
-      return `<image src="${this.selectFileInfo.path + this.selectFileInfo.pathSep + href}" alt="${text}" />`;
+      return `<image src="${this.selectFileInfo.path + sep + href}" alt="${text}" />`;
     };
 
     this.markOtion.renderer = this.markRender;
   }
 
   ngOnInit() {
+    console.log('OSの区切り文字' + sep);
     this.shareDataService.selectFileInfo$.subscribe(
       selectFileInfo => {
+        if (this.selectFileInfo) {
+          if (this.selectFileInfo.path === selectFileInfo.path && this.selectFileInfo.name === selectFileInfo.name) {
+            this.contents.nativeElement.scrollTop = 0;
+            return;
+          }
+          if (selectFileInfo.grepFlg) {
+            this.selectFileInfo = selectFileInfo;
+            this.contents.nativeElement.scrollTop = 0;
+            return;
+          }
+        }
         this.selectFileInfo = selectFileInfo;
         this.history.add(this.selectFileInfo);
+        setTimeout(() => {
+          this.contents.nativeElement.scrollTop = 0;
+        }, 100);
       }
     );
     this.shareDataService.markdownData$.subscribe(
       markdown => {
-        this.markdown = marked(markdown, this.markOtion);
+        this.markdown = markdown;
+        this.html = marked(markdown, this.markOtion);
+        if (this.scrollDownFlg) {
+          setTimeout(() => {
+            this.contents.nativeElement.scrollTop = this.contents.nativeElement.scrollHeight;
+          }, 20);
+        }
       }
     );
-
-
   }
-
 
   canHistoryGo(): boolean {
     return this.history.canHistoryGo();
@@ -174,6 +200,22 @@ export class ViewerComponent implements OnInit {
     if (this.canHistoryGo()) {
       this.history.doHistoryGo();
     }
+  }
+
+  doScrollDown(): void {
+    if (!this.scrollDownFlg) {
+      this.contents.nativeElement.scrollTop = this.contents.nativeElement.scrollHeight;
+    }
+    this.scrollDownFlg = !this.scrollDownFlg;
+    console.log(this.contents);
+  }
+
+  doSearch() {
+    if (this.search.length === 0) {
+      this.es.remote.getCurrentWebContents().stopFindInPage('clearSelection');
+      return;
+    }
+    this.es.remote.getCurrentWebContents().findInPage(this.search);
   }
 }
 
