@@ -16,6 +16,7 @@ declare var CodeMirror: typeof codetype;
 export class MarkdownComponent implements AfterContentInit, OnDestroy {
   @ViewChild('codemirror') codemirror: ElementRef;
   @ViewChild('repletion') repletion: ElementRef;
+  viewerSep: string;
   private subscription: Subscription;
   markdown: string;
   instance: codetype.EditorFromTextArea;
@@ -28,6 +29,7 @@ export class MarkdownComponent implements AfterContentInit, OnDestroy {
   }
 
   ngAfterContentInit() {
+    this.viewerSep = sep;
     this.instance = CodeMirror.fromTextArea(this.codemirror.nativeElement, {
       mode: 'markdown',
       lineNumbers: true,

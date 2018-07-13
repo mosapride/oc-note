@@ -40,7 +40,7 @@ export class ViewerComponent implements OnInit {
                   str += wk[i] + '\n';
                 }
               }
-              head += `<span class='highlight-title'>${title}</span>`;
+              head += `<span class='highlight-title'>${title}</span><br/>`;
             }
           }
           return `${head}<div class="highlight-code">${hljs.highlight(lang, str, true).value}</div></code></pre>`;
@@ -103,7 +103,7 @@ export class ViewerComponent implements OnInit {
     // linkが内部リンクの場合はa href機能を動作させず、clickイベントで処理させる。
     this.markRender.link = (href: string, title: string, text: string): string => {
       if (href.match(/^http/) || href.match('//')) {
-        return `<a href="javascript:void(0)" title="${href}" alt="${href}" data-outerLink="${href}" target="_blank" class="outer-link" title="${title}">${text}</a>`;
+        return `<a href="javascript:void(0)" title="${href}" alt="${href}" data-outerLink="${href}" target="_blank" class="external-link" title="${title}">${text}</a>`;
       }
       let cssClazzName = 'internal-link';
       let markfile = href.replace(/\//g, sep);
