@@ -1,17 +1,20 @@
 <div class="workspace">
-  <a (click)="openWorkSpace()">open work space</a>
+  <div class="line">
+    <a class="input-flat" (click)="openWorkSpace()">open work space</a>
+    <img title="hitory go" src="assets/close.svg" class="icon" />
+  </div>
+
   <div>
     <input type="text" placeholder="grep" [(ngModel)]="search" class="search" (keydown.enter)="doSearch()">
   </div>
-
 </div>
 
 <ng-template #rowsTemplate let-rows>
   <ng-container *ngFor="let row of rows">
     <ng-container *ngIf="row.isDirectory">
       <div class="line" (click)="folerOnOff(row)" [style.padding-left]="10 * row.depth + 'px'">
-        <img *ngIf="!row.opened" src="assets/tree-icon/baseline-folder-24px.svg" />
-        <img *ngIf="row.opened" src="assets/tree-icon/baseline-folder_open-24px.svg" />
+        <img *ngIf="!row.opened" class="tree-icon" src="assets/tree-icon/baseline-folder-24px.svg" />
+        <img *ngIf="row.opened" class="tree-icon" src="assets/tree-icon/baseline-folder_open-24px.svg" />
         <span class="name">{{row.name}}</span>
       </div>
       <ng-container *ngIf="row.opened">
@@ -20,7 +23,7 @@
     </ng-container>
     <ng-container *ngIf="!row.isDirectory">
       <div class="line" (click)="openFile(row)" [class.active]="isActive(row)" [style.padding-left]="10 * row.depth + 'px'">
-        <img [src]="getFileIcon(row)" />
+        <img class="tree-icon" [src]="getFileIcon(row)" />
         <span class="name">{{row.name}}</span>
       </div>
     </ng-container>

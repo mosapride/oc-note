@@ -35,7 +35,7 @@ export class HomeComponent implements OnInit {
     if (this.resizeMainFlg) {
       const mvpoint = e.clientX - this.explorer.nativeElement.clientWidth;
       const par = mvpoint / this.main.nativeElement.clientWidth * 100;
-      if (par >= 5 && par <= 95) {
+      if (par >= 1 && par <= 99) {
         this.markdown.nativeElement.style.width = `calc(${par}%)`;
         this.viewer.nativeElement.style.left = `calc(${par}%)`;
         this.viewer.nativeElement.style.width = `calc(${100 - par}%)`;
