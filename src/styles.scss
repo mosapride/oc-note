@@ -65,8 +65,6 @@ a {
 }
 
 .external-link {
-  // background: url("assets/link-out.png") center right no-repeat;
-  // padding-right: 13px;
   &::after {
     content: "↗";
   }
