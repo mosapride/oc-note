@@ -90,7 +90,6 @@ export class MarkedComponent implements OnInit {
   }
 
   constructor(public es: ElectronService, public shareDataService: ShareDataService) {
-
     this.fileManager = new FileManager(es);
     this.history = new MarkedHistory(shareDataService);
 
@@ -115,7 +114,7 @@ export class MarkedComponent implements OnInit {
     };
 
     // imageタグの場合末尾に#数値がある場合はlightboxとして表示する。
-    this.markRender.image = (href: string, title: string, text: string): string => {
+    this.markRender.image = (href: string, title: string, text: string ): string => {
       let optionCode = '';
 
       if (text.length === 0) {
@@ -148,7 +147,6 @@ export class MarkedComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log('OSの区切り文字' + sep);
     this.shareDataService.selectFileInfo$.subscribe(
       selectFileInfo => {
         if (this.selectFileInfo) {

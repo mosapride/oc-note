@@ -199,6 +199,10 @@ export class FileManager {
       });
   }
 
+  public save(path: string, writeData: string, callback: () => void) {
+    this.fs.writeFile(path, writeData, callback);
+  }
+
 
 }
 

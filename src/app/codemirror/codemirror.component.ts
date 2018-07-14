@@ -23,6 +23,9 @@ export class CodemirrorComponent implements AfterContentInit, OnDestroy {
   hightlightTheme: string[];
   selectFileInfo: SelectFileInfo;
   fileManager: FileManager;
+  SAVE_DELAY = 500;
+  saveFileLastName = '';
+  timeoutInstance: NodeJS.Timer = null;
   constructor(public es: ElectronService, public shareDataService: ShareDataService) {
     this.hightlightTheme = new Constant().highlightTheme;
     this.fileManager = new FileManager(es);
@@ -64,6 +67,11 @@ export class CodemirrorComponent implements AfterContentInit, OnDestroy {
         if (selectFileInfo.grepFlg) {
           this.instance.getDoc().clearHistory();
           return;
+        }
+        if (this.timeoutInstance !== null) {
+          clearTimeout(this.timeoutInstance);
+          this.timeoutInstance = null;
+          this.saveFileLastName = '';
         }
         this.selectFileInfo = selectFileInfo;
         this.markdown = this.fileManager.fileRead(this.selectFileInfo.getFullPathFilename());
@@ -130,5 +138,33 @@ export class CodemirrorComponent implements AfterContentInit, OnDestroy {
    */
   private onChangeTextArea(): void {
     this.shareDataService.onNotifyMarkdownDataChanged(this.getCode());
+
+    if (this.timeoutInstance !== null) {
+      clearInterval(this.timeoutInstance);
+      this.timeoutInstance = null;
+    }
+
+    if (!this.selectFileInfo) {
+      return;
+    }
+
+    // if (this.saveFileLastName !== this.selectFileInfo.getFullPathFilename()) {
+    //   this.saveFileLastName = this.selectFileInfo.getFullPathFilename();
+    //   return;
+    // }
+
+    this.timeoutInstance = setTimeout(() => {
+      if (this.saveFileLastName !== this.selectFileInfo.getFullPathFilename()) {
+        this.saveFileLastName = this.selectFileInfo.getFullPathFilename();
+        return;
+      }
+      this.fileManager.save(this.selectFileInfo.getFullPathFilename(), this.getCode(), this.callbackSaved);
+      this.timeoutInstance = null;
+    }, this.SAVE_DELAY);
+
+  }
+
+  private callbackSaved(): void {
+    console.log(`saved`);
   }
 }
