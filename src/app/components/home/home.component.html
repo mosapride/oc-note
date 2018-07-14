@@ -4,19 +4,19 @@
   </div>
   <div class="section-explorer" #explorer [class.protect]="isProtect">
     <div class="section-explorer-scroll-width" [class.protect]="isProtect">
-      <app-tree-view></app-tree-view>
+      <app-explorer></app-explorer>
     </div>
 
   </div>
   <div class="section-main" #main [class.protect]="isProtect">
     <div class="markdown" #markdown [class.protect]="isProtect">
       <div class="resize-bar" (mousedown)="resizeExplolerMarkdown($event)"></div>
-      <app-markdown></app-markdown>
+      <app-codemirror></app-codemirror>
     </div>
     <div class="viewer" #viewer [class.protect]="isProtect">
       <div class="resize-bar" (mousedown)="resizeMain($event)"></div>
 
-      <app-viewer></app-viewer>
+      <app-marked></app-marked>
     </div>
 
   </div>

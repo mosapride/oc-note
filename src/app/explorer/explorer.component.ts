@@ -7,11 +7,11 @@ import { MessageBoxOptions } from 'electron';
 import { sep } from 'path';
 
 @Component({
-  selector: 'app-tree-view',
-  templateUrl: './tree-view.component.html',
-  styleUrls: ['./tree-view.component.scss']
+  selector: 'app-explorer',
+  templateUrl: './explorer.component.html',
+  styleUrls: ['./explorer.component.scss']
 })
-export class TreeViewComponent implements OnInit {
+export class ExplorerComponent implements OnInit {
   search = '';
   fileManager: FileManager;
   treeExplorer: TreeExplorer;

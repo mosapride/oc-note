@@ -9,11 +9,11 @@ import { sep } from 'path';
 declare var CodeMirror: typeof codetype;
 
 @Component({
-  selector: 'app-markdown',
-  templateUrl: './markdown.component.html',
-  styleUrls: ['./markdown.component.scss']
+  selector: 'app-codemirror',
+  templateUrl: './codemirror.component.html',
+  styleUrls: ['./codemirror.component.scss']
 })
-export class MarkdownComponent implements AfterContentInit, OnDestroy {
+export class CodemirrorComponent implements AfterContentInit, OnDestroy {
   @ViewChild('codemirror') codemirror: ElementRef;
   @ViewChild('repletion') repletion: ElementRef;
   viewerSep: string;

@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MarkdownComponent } from './markdown.component';
+import { CodemirrorComponent } from './codemirror.component';
 
-describe('MarkdownComponent', () => {
-  let component: MarkdownComponent;
-  let fixture: ComponentFixture<MarkdownComponent>;
+describe('CodemirrorComponent', () => {
+  let component: CodemirrorComponent;
+  let fixture: ComponentFixture<CodemirrorComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ MarkdownComponent ]
+      declarations: [ CodemirrorComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(MarkdownComponent);
+    fixture = TestBed.createComponent(CodemirrorComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

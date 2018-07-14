@@ -1,6 +1,6 @@
 import { SelectFileInfo, ShareDataService } from '../share-data.service';
 
-export class ViewerHistory {
+export class MarkedHistory {
 
   public selectFileInfoHistory: SelectFileInfo[] = [];
   public selectHistoryIndex = -1;

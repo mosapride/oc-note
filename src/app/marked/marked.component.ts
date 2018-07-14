@@ -4,15 +4,15 @@ import * as marked from 'marked';
 import * as hljs from 'highlight.js';
 import { FileManager } from '../file-manager';
 import { ElectronService } from '../providers/electron.service';
-import { ViewerHistory } from './viewer-history';
+import { MarkedHistory } from './marked-history';
 import { sep as sep } from 'path';
 
 @Component({
-  selector: 'app-viewer',
-  templateUrl: './viewer.component.html',
-  styleUrls: ['./viewer.component.scss']
+  selector: 'app-marked',
+  templateUrl: './marked.component.html',
+  styleUrls: ['./marked.component.scss']
 })
-export class ViewerComponent implements OnInit {
+export class MarkedComponent implements OnInit {
   @ViewChild('menu') menu: ElementRef;
   @ViewChild('contents') contents: ElementRef;
   markdown = '';
@@ -20,7 +20,7 @@ export class ViewerComponent implements OnInit {
   public markRender = new marked.Renderer();
   public fileManager: FileManager;
   public selectFileInfo: SelectFileInfo;
-  public history: ViewerHistory;
+  public history: MarkedHistory;
   public scrollDownFlg = false;
   public search = '';
 
@@ -92,7 +92,7 @@ export class ViewerComponent implements OnInit {
   constructor(public es: ElectronService, public shareDataService: ShareDataService) {
 
     this.fileManager = new FileManager(es);
-    this.history = new ViewerHistory(shareDataService);
+    this.history = new MarkedHistory(shareDataService);
 
     this.markRender.heading = (text: string, level: number, raw: string): string => {
       const buffer = new Buffer(text);

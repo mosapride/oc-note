@@ -19,10 +19,10 @@ import { WebviewDirective } from './directives/webview.directive';
 
 import { AppComponent } from './app.component';
 import { HomeComponent } from './components/home/home.component';
-import { TreeViewComponent } from './tree-view/tree-view.component';
-import { MarkdownComponent } from './markdown/markdown.component';
+import { ExplorerComponent} from './explorer/explorer.component';
 import { MenuComponent } from './menu/menu.component';
-import { ViewerComponent } from './viewer/viewer.component';
+import { MarkedComponent } from './marked/marked.component';
+import { CodemirrorComponent } from './codemirror/codemirror.component';
 import { NoSanitizePipe } from './no-sanitize.pipe';
 
 // AoT requires an exported function for factories
@@ -35,10 +35,10 @@ export function HttpLoaderFactory(http: HttpClient) {
     AppComponent,
     HomeComponent,
     WebviewDirective,
-    TreeViewComponent,
-    MarkdownComponent,
+    ExplorerComponent,
     MenuComponent,
-    ViewerComponent,
+    CodemirrorComponent,
+    MarkedComponent,
     NoSanitizePipe
   ],
   imports: [
