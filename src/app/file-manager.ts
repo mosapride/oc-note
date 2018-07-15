@@ -2,6 +2,7 @@ import { ElectronService } from './providers/electron.service';
 import { OpenDialogOptions } from 'electron';
 import * as fs from 'fs';
 import { TreeExplorer, TreeFiles } from './tree-explorer';
+import { sep } from 'path';
 
 export class FileManager {
   es: ElectronService;
@@ -113,21 +114,18 @@ export class FileManager {
   }
 
 
-  public reloadWorkDirectory(workDirectory: string, oldTreeExplorer: TreeExplorer, callback: (tree: TreeExplorer) => void ): void {
+  public reloadWorkDirectory(workDirectory: string, oldTreeExplorer: TreeExplorer, callback: (tree: TreeExplorer) => void): void {
     if (!oldTreeExplorer) {
       return;
     }
-    this.asyncfindAll(workDirectory).then(treeFiles => {
-      const openFileList = this._getOpenDirectoryList(oldTreeExplorer);
 
-      for (const tree of treeFiles.childTree) {
-        this._reloadWorkDrectory(openFileList, tree);
-      }
-      callback(treeFiles);
-    });
+    const treeFiles = this.find(workDirectory);
+    const openFileList = this._getOpenDirectoryList(oldTreeExplorer);
+    for (const tree of treeFiles.childTree) {
+      this._reloadWorkDrectory(openFileList, tree);
+    }
+    callback(treeFiles);
   }
-
-
 
   private _reloadWorkDrectory(openFileList: Array<string>, file: TreeFiles) {
     for (const f of openFileList) {
@@ -157,75 +155,36 @@ export class FileManager {
     }
   }
 
-  /**
-   * `find .`のように末端ディレクトリまでのディレクトリ、ファイルを調べる。
-   *
-   * @param path find先のディレクトリ
-   * @return Promise<TreeExplorer> ディレクトリ情報
-   */
-  public asyncfindAll(dir: string, callback?: () => void): Promise<TreeExplorer> {
-    if (callback) {
-      this.asyncfindAllStartTime = new Date();
-      this.asyncCallBackFlg = false;
-    }
-    this.treeExplorer = new TreeExplorer(dir);
-    return this._asyncfindAll(dir, this.treeExplorer.childTree, callback);
+  public find(path: string): TreeExplorer {
+    const treeExplorer = new TreeExplorer(path);
+    this._find(path, treeExplorer.childTree, 0);
+    return treeExplorer;
   }
 
-  /**
-   * `find .`のように末端ディレクトリまでのディレクトリ、ファイルを調べる。
-   *
-   * @param path find先のディレクトリ
-   * @param treeFiles 検索結果を格納するObject
-   */
-  private async _asyncfindAll(path: string, treeFiles: TreeFiles[], callback?: () => void): Promise<TreeExplorer> {
-    let rtn: TreeExplorer;
-    await this._promiseFindAll(path, treeFiles, 0, callback).then(data => { rtn = data; });
-    return rtn;
-  }
-
-  private _promiseFindAll(path: string, treeFiles: TreeFiles[], depth: number, callback?: () => void) {
-    if (callback) {
-      if ((new Date().getTime() - this.asyncfindAllStartTime.getTime()) >= this.ASYNC_TIME_OUT_MS) {
-        if (!this.asyncCallBackFlg) {
-          callback();
-          this.asyncCallBackFlg = true;
-        }
-        return;
+  private _find(path: string, treeFiles: TreeFiles[], depth: number) {
+    const names = this.fs.readdirSync(path);
+    for (let counter = 0; counter < names.length; counter++) {
+      if (this.fs.statSync(path + sep + names[counter]).isDirectory()) {
+        treeFiles.push(new TreeFiles(path, names[counter], depth + 1, true));
+        this._find(path + sep + names[counter], treeFiles[counter].childTree, depth + 1);
+      } else {
+        treeFiles.push(new TreeFiles(path, names[counter], depth + 1, false));
       }
     }
-    return new Promise<TreeExplorer>((resolve, reject) => {
-      this.fs.readdir(path, (err, names) => {
-        if (err) {
-          throw err;
-        }
-        let counter = 0;
-        for (const name of names) {
-          if (this.fs.statSync(path + this.pathSep + name).isDirectory()) {
-            treeFiles.push(new TreeFiles(path, name, depth + 1, true));
-            this._promiseFindAll(path + this.pathSep + name, treeFiles[counter].childTree, depth + 1, callback);
-          } else {
-            treeFiles.push(new TreeFiles(path, name, depth + 1, false));
-          }
-          counter++;
-        }
-        treeFiles.sort((a, b) => {
-          if (a.isDirectory === true && b.isDirectory === false) {
-            return -1;
-          }
-          if (a.isDirectory === false && b.isDirectory === true) {
-            return 1;
-          }
-          if (a.name.toUpperCase() > b.name.toUpperCase()) {
-            return 1;
-          }
-          if (a.name.toUpperCase() < b.name.toUpperCase()) {
-            return -1;
-          }
-          return 0;
-        });
-        resolve(this.treeExplorer);
-      });
+    treeFiles.sort((a, b) => {
+      if (a.isDirectory === true && b.isDirectory === false) {
+        return -1;
+      }
+      if (a.isDirectory === false && b.isDirectory === true) {
+        return 1;
+      }
+      if (a.name.toUpperCase() > b.name.toUpperCase()) {
+        return 1;
+      }
+      if (a.name.toUpperCase() < b.name.toUpperCase()) {
+        return -1;
+      }
+      return 0;
     });
   }
 

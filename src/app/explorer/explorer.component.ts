@@ -81,12 +81,13 @@ export class ExplorerComponent implements OnInit {
    */
   openWorkSpace() {
     const dir = this.fileManager.selectFolder();
-    this.fileManager.asyncfindAll(dir).then(folders => {
-      this.treeExplorer = folders;
-      if (this.fileManager.isStatFile(folders.workDirectory + sep + 'style.css')) {
-        document.getElementById('cs_viewer')['href'] = `${folders.workDirectory}${sep}style.css`;
-      }
-    });
+    if (dir === '') {
+      return;
+    }
+    this.treeExplorer = this.fileManager.find(dir);
+    if (this.fileManager.isStatFile(this.treeExplorer.workDirectory + sep + 'style.css')) {
+      document.getElementById('cs_viewer')['href'] = `${this.treeExplorer.workDirectory}${sep}style.css`;
+    }
   }
 
   /**
@@ -186,6 +187,10 @@ export class ExplorerComponent implements OnInit {
         return;
       }
       this.fileManager.reloadWorkDirectory(this.treeExplorer.workDirectory, this.treeExplorer, tree => { this.treeExplorer = tree; });
-     }, 1000);
+    }, 1000);
+  }
+
+  test(): void {
+    this.fileManager.reloadWorkDirectory(this.treeExplorer.workDirectory, this.treeExplorer, tree => { this.treeExplorer = tree; });
   }
 }

@@ -36,20 +36,12 @@ export class MenuComponent implements OnInit {
 
   selectFolder(): void {
     const dir = this.fileManager.selectFolder();
-    if (dir !== '') {
-      this.fileManager.asyncfindAll(dir);
-    }
+
   }
 
   debug() {
     console.log(`-- debug -- `);
-    const dir = this.fileManager.selectFolder();
-    if (dir !== '') {
-      this.fileManager.asyncfindAll(dir).then(folders => {
-        console.log(`ログ出すよ`);
-        console.log(folders);
-      });
-    }
+
     console.log(`おしりω`);
   }
 }
