@@ -186,4 +186,22 @@ export class ExplorerComponent implements OnInit {
     }
     this.fileManager.reloadWorkDirectory(this.treeExplorer.workDirectory, this.treeExplorer, tree => { this.treeExplorer = tree; });
   }
+
+  closeFolder(): void {
+    if (!this.treeExplorer) {
+      return;
+    }
+    for (const t of this.treeExplorer.childTree) {
+      this._closeFolder(t);
+    }
+  }
+
+  private _closeFolder(tree: TreeFiles): void {
+    if (tree.opened) {
+      tree.opened = false;
+    }
+    for (const t of tree.childTree) {
+      this._closeFolder(t);
+    }
+  }
 }
