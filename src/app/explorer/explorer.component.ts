@@ -5,6 +5,7 @@ import { TreeExplorer, TreeFiles } from '../tree-explorer';
 import { ShareDataService, SelectFileInfo } from '../share-data.service';
 import { MessageBoxOptions } from 'electron';
 import { sep } from 'path';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-explorer',
@@ -24,7 +25,7 @@ export class ExplorerComponent implements OnInit {
     buttons: ['OK', 'cancel']
   };
 
-  constructor(public es: ElectronService, public shareDataService: ShareDataService) {
+  constructor(public es: ElectronService, public shareDataService: ShareDataService, private sanitizer: DomSanitizer) {
     this.fileManager = new FileManager(es);
     this.selectFileInfo = new SelectFileInfo();
   }
@@ -124,10 +125,31 @@ export class ExplorerComponent implements OnInit {
   private rightClickOnFile(file: TreeFiles): void {
 
   }
+
+  isImage(name: string): boolean {
+    if (name.match(/\.png$|\.jpeg$|\.gif$|\.bmp$|\.jpg$|\.tiff$|\.tif$/)) {
+      return true;
+    }
+    return false;
+  }
+
+  getLocalImageUrl(tree: TreeFiles): SafeUrl {
+    return this.sanitizer.bypassSecurityTrustUrl(tree.path + sep + tree.name);
+  }
+
+  getBase64LocalImageUrl(tree: TreeFiles): string {
+    const buffer = new Buffer(tree.path + sep + tree.name);
+    return buffer.toString('base64');
+  }
+
   getFileIcon(tree: TreeFiles): string {
     const rtnSrc = 'assets/tree-icon/';
     if (tree.name.match(/\.md$/)) {
       return rtnSrc + 'baseline-code-24px.svg';
+    }
+
+    if (tree.name.match(/\.png$|\.jpeg$|\.gif$|\.bmp$|\.jpg$|\.tiff$|\.tif$/)) {
+      return rtnSrc + 'baseline-image-24px.svg';
     }
     return rtnSrc + 'baseline-info-24px.svg';
   }

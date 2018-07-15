@@ -23,10 +23,18 @@
       </ng-container>
     </ng-container>
     <ng-container *ngIf="!row.isDirectory">
-      <div class="line" (click)="openFile(row)" [class.active]="isActive(row)" [style.padding-left]="10 * row.depth + 'px'">
-        <img class="tree-icon" [src]="getFileIcon(row)" />
-        <span class="name">{{row.name}}</span>
-      </div>
+      <ng-container *ngIf="isImage(row.name)">
+        <a class="line" [href]="getLocalImageUrl(row)" [attr.data-lightbox]="getBase64LocalImageUrl(row)" [class.active]="isActive(row)" [style.padding-left]="10 * row.depth + 'px'">
+          <img class="tree-icon" [src]="getFileIcon(row)" />
+          <span class="name">{{row.name}}</span>
+        </a>
+      </ng-container>
+      <ng-container *ngIf="!isImage(row.name)">
+        <div class="line" (click)="openFile(row)" [class.active]="isActive(row)" [style.padding-left]="10 * row.depth + 'px'">
+          <img class="tree-icon" [src]="getFileIcon(row)" />
+          <span class="name">{{row.name}}</span>
+        </div>
+      </ng-container>
     </ng-container>
   </ng-container>
 </ng-template>

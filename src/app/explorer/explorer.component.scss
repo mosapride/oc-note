@@ -100,12 +100,22 @@
   &:hover {
     background-color: rgba(0, 0, 0, 0.1);
     cursor: pointer;
+    display: block;
   }
 }
 
-.css-treeview .name {
-  vertical-align: super;
-  padding-left: 3px;
+.css-treeview {
+  .name {
+    vertical-align: super;
+    padding-left: 3px;
+  }
+  a {
+    display: block;
+    // vertical-align: super;
+    padding-left: 3px;
+    color: unset;
+    text-decoration: none;
+  }
 }
 
 .css-treeview {
