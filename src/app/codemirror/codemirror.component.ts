@@ -36,11 +36,12 @@ export class CodemirrorComponent implements AfterContentInit, OnDestroy {
     this.instance = CodeMirror.fromTextArea(this.codemirror.nativeElement, {
       mode: 'markdown',
       lineNumbers: true,
+      lineWrapping: true,
       value: this.markdown,
       theme: 'default',
       extraKeys: { 'Enter': 'newlineAndIndentContinueMarkdownList' },
-
     });
+
 
     this.instance.setSize('100%', `calc(100% - ${this.repletion.nativeElement.clientHeight}px)`);
     this.instance.on('change', (instance) => this.onChangeTextArea());
@@ -59,8 +60,9 @@ export class CodemirrorComponent implements AfterContentInit, OnDestroy {
         return;
       }
       console.log(imageFile);
-
     });
+
+
 
     this.shareDataService.selectFileInfo$.subscribe(
       selectFileInfo => {
