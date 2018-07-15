@@ -29,8 +29,18 @@
       color: white;
     }
   }
-  .icon {
+  .icon-sync {
     margin-left: auto;
+    margin-right: 10px;
+    filter: brightness(0) invert(0.5);
+    background-color: none;
+    &:hover {
+      cursor: pointer;
+      background-color: rgba(0, 0, 0, 0.2);
+      border-radius: 5px;
+    }
+  }
+  .icon-close {
     margin-right: 10px;
     filter: brightness(0) invert(0.5);
     background-color: none;
