@@ -113,6 +113,49 @@ export class FileManager {
   }
 
 
+  public reloadWorkDirectory(workDirectory: string, oldTreeExplorer: TreeExplorer, callback: (tree: TreeExplorer) => void ): void {
+    if (!oldTreeExplorer) {
+      return;
+    }
+    this.asyncfindAll(workDirectory).then(treeFiles => {
+      const openFileList = this._getOpenDirectoryList(oldTreeExplorer);
+
+      for (const tree of treeFiles.childTree) {
+        this._reloadWorkDrectory(openFileList, tree);
+      }
+      callback(treeFiles);
+    });
+  }
+
+
+
+  private _reloadWorkDrectory(openFileList: Array<string>, file: TreeFiles) {
+    for (const f of openFileList) {
+      if (f === (file.path + file.name)) {
+        file.opened = true;
+      }
+    }
+    for (const c of file.childTree) {
+      this._reloadWorkDrectory(openFileList, c);
+    }
+  }
+
+  private _getOpenDirectoryList(exp: TreeExplorer): Array<string> {
+    const rtnArray = [];
+    for (const t of exp.childTree) {
+      this.__getOpenDirectoryList(rtnArray, t);
+    }
+    return rtnArray;
+  }
+
+  private __getOpenDirectoryList(fullPathList: Array<string>, file: TreeFiles): void {
+    if (file.opened) {
+      fullPathList.push(file.path + file.name);
+    }
+    for (const child of file.childTree) {
+      this.__getOpenDirectoryList(fullPathList, child);
+    }
+  }
 
   /**
    * `find .`のように末端ディレクトリまでのディレクトリ、ファイルを調べる。

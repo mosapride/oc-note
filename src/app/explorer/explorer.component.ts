@@ -36,6 +36,7 @@ export class ExplorerComponent implements OnInit {
         this.openFolder(this.selectFileInfo.path);
       }
     );
+    this._monitoringExplorer();
   }
 
   private openFolder(path: string): void {
@@ -176,5 +177,15 @@ export class ExplorerComponent implements OnInit {
       this.shareDataService.onNotifySelectFileInfoChanged(selectFileInfo);
       this.shareDataService.onNotifyMarkdownDataChanged(markdown);
     }
+  }
+
+
+  private _monitoringExplorer() {
+    setInterval(() => {
+      if (!this.treeExplorer) {
+        return;
+      }
+      this.fileManager.reloadWorkDirectory(this.treeExplorer.workDirectory, this.treeExplorer, tree => { this.treeExplorer = tree; });
+     }, 1000);
   }
 }
