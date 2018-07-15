@@ -1,6 +1,6 @@
 <div class="menu" #menu>
-  <img title="history back" src="assets/left.svg" class="icon" [class.disable]="!canHistoryBack()" (click)="doHistoryBack()">
-  <img title="hitory go" src="assets/right.svg" class="icon" [class.disable]="!canHistoryGo()" (click)="doHistoryGo()">
+  <img title="history back" src="assets/left.svg" class="history-icon" [class.disable]="!canHistoryBack()" (click)="doHistoryBack()">
+  <img title="hitory go" src="assets/right.svg" class="history-icon" [class.disable]="!canHistoryGo()" (click)="doHistoryGo()">
   <img title="auto scroll down" src="assets/down.svg" class="icon" [class.disable]="!scrollDownFlg" (click)="doScrollDown()">
   <input type="text" size="20" placeholder="search" class="search" [(ngModel)]="search" (keyup.enter)="doSearch()" />
 </div>

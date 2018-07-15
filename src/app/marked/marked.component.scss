@@ -8,18 +8,36 @@
   height: 33px;
   display: flex;
   align-items: center;
-  img.icon {
+  img.history-icon {
     padding: 0 5px;
     margin-left: 5px;
     &:hover {
-      background-color: rgba(0, 0, 0, 0.2);
       border-radius: 5px;
       cursor: pointer;
+      background-color: rgba(0, 0, 0, 0);
+      &:not(.disable) {
+        background-color: rgba(0, 0, 0, 0.3);
+      }
     }
     &.disable {
       cursor: auto;
       filter: brightness(0) invert(0.8);
-      background-color: none;
+    }
+  }
+  img.icon {
+    padding: 0 5px;
+    margin-left: 5px;
+    border:solid 1px gray;
+    border-radius: 5px;
+    margin-right: 10px;
+    &:hover {
+      border-radius: 5px;
+      cursor: pointer;
+      background-color: rgba(0, 0, 0, 0.3);
+    }
+    &.disable {
+      cursor: auto;
+      filter: brightness(0) invert(0.8);
     }
   }
   .search {
