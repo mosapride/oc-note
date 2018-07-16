@@ -116,9 +116,11 @@ export class ExplorerComponent implements OnInit {
   private rightClickOnDirectory(file: TreeFiles): void {
     const menu = new this.es.remote.Menu();
     const menuItem = this.es.remote.MenuItem;
-    menu.append(new menuItem({ label: 'MenuItem1', click() { console.log('item 1 clicked'); } }));
+    menu.append(new menuItem({ label: 'new folder', click() { console.log('item 1 clicked'); } }));
+    menu.append(new menuItem({ label: 'new file', click() { console.log('item 1 clicked'); } }));
+    menu.append(new menuItem({ label: 'rename', click() { console.log('item 1 clicked'); } }));
     menu.append(new menuItem({ type: 'separator' }));
-    menu.append(new menuItem({ label: 'MenuItem2', type: 'checkbox', checked: true }));
+    menu.append(new menuItem({ label: 'delete', click() { console.log('item 1 clicked'); } }));
     menu.popup({ window: this.es.remote.getCurrentWindow() });
   }
 

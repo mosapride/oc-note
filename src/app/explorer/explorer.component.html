@@ -13,7 +13,7 @@
 <ng-template #rowsTemplate let-rows>
   <ng-container *ngFor="let row of rows">
     <ng-container *ngIf="row.isDirectory">
-      <div class="line" (click)="folerOnOff(row)" [style.padding-left]="10 * row.depth + 'px'">
+      <div class="line" (click)="folerOnOff(row)" [style.padding-left]="10 * row.depth + 'px'" (contextmenu)="onRightClick(row)" >
         <img *ngIf="!row.opened" class="tree-icon" src="assets/tree-icon/baseline-folder-24px.svg" />
         <img *ngIf="row.opened" class="tree-icon" src="assets/tree-icon/baseline-folder_open-24px.svg" />
         <span class="name">{{row.name}}</span>
