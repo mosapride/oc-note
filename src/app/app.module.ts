@@ -26,7 +26,8 @@ import { CodemirrorComponent } from './codemirror/codemirror.component';
 import { NoSanitizePipe } from './no-sanitize.pipe';
 import { DialogComponent } from './dialog/dialog.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatDialogModule } from '@angular/material';
+import { MatDialogModule } from '@angular/material/dialog';
+
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {

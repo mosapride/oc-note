@@ -1,44 +1,41 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog, MatDialogConfig } from '@angular/material';
 import { Observable } from 'rxjs';
-@Component({
-  template:
-  `
-  <h1 md-dialog-title>
-    <div style="display:flex; align-items :center">
-      {{buttonPosition}}<i *ngIf="iconName" class="material-icons" [style.color]="defaltIconColor">{{iconName}}</i>{{title}}
-    </div>
-  </h1>
-  <mat-dialog-content>
-    <div [innerHTML]="content"></div>
-  </mat-dialog-content>
 
-  <mat-dialog-actions [style.justify-content]="positionStyle">
-    <div *ngIf="dialogPattern === 'confirm'" >
-      <button md-button [mat-dialog-close]="false">cancel</button>
-      <button md-button [mat-dialog-close]="true">OK</button>
-    </div>
-    <div *ngIf="dialogPattern === 'error' || dialogPattern === 'warning' || dialogPattern === 'info'" >
-      <button md-button [mat-dialog-close]="true">close</button>
-    </div>
-  </mat-dialog-actions>
-  {{buttonPosition}}
-  `
+type position = ('left' | 'center' | 'right');
+// tslint:disable-next-line:interface-over-type-literal
+type dialogConfig = {
+  title: string,
+  iconName: string,
+  iconColor: string,
+  defaltIconColor: string,
+  content: string,
+  buttonPosition: position,
+  positionStyle: string
+  dialogPattern: string,
+  defaltButtonPosition: position,
+  newFile: string,
+  deleteFile: string,
+  renameOldName: string,
+  renameNewName: string
+};
+
+@Component({
+  templateUrl: './dialog.component.html',
+  styleUrls: ['./dialog.component.scss']
 })
 export class DialogComponent implements OnInit {
-
-  dialogPattern: ('confirm' | 'warning' | 'error' | 'info');
-
   iconName: string;
-  iconColor: string;
+  dialogPattern: string;
+  iconColor = 'rgba(20, 20, 20, 0.7)';
   defaltIconColor = 'rgba(20, 20, 20, 0.7)';
   title: string;
   content: string;
-  buttonPosition: ('left' | 'center' | 'right');
+  buttonPosition: position;
   positionStyle: string;
-  defaltButtonPosition: ('left' | 'center' | 'right') = 'center';
+  defaltButtonPosition: position = 'center';
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: any,
+    @Inject(MAT_DIALOG_DATA) public data: dialogConfig,
     public dialogRef: MatDialogRef<DialogComponent>
   ) { }
 
@@ -49,7 +46,6 @@ export class DialogComponent implements OnInit {
       this.iconColor = this.defaltIconColor;
     }
     this.title = config.title;
-    this.content = config.content;
     switch (config.buttonPosition) {
       case 'left':
         this.positionStyle = '';
@@ -57,7 +53,7 @@ export class DialogComponent implements OnInit {
       case 'center':
         this.positionStyle = 'justify-content:center';
         break;
-      case 'rigth':
+      case 'right':
         this.positionStyle = 'justify-content:flex-end';
         break;
       default:
@@ -69,6 +65,15 @@ export class DialogComponent implements OnInit {
     }
     this.dialogPattern = config.dialogPattern;
   }
+
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
+
+  onKeyEnter() {
+    this.dialogRef.close(this.data.newFile);
+  }
+
 }
 /**
  * Dialog Wrapper
@@ -89,9 +94,20 @@ export class DialogComponent implements OnInit {
  * ```
 */
 export class Dialog {
-  private dialog;
+  private dialog: MatDialog;
   constructor(dialog: MatDialog) {
     this.dialog = dialog;
+  }
+
+  public newFolder(): Observable<string> {
+    const config = new MatDialogConfig();
+    config.data = {
+      title: 'create folder',
+      iconName: 'help_outline',
+      dialogPattern: 'newfolder',
+    };
+    const ref = this.dialog.open<DialogComponent, dialogConfig, string>(DialogComponent, config);
+    return ref.afterClosed();
   }
 
   /**
@@ -143,15 +159,15 @@ export class Dialog {
    * @returns {Observable<boolean>} true:close, undefined:ESC,Click outside the dialog
    * @memberof Dialog
    */
-  public error(title: string , content: string): Observable<boolean> {
+  public error(title: string, content: string): Observable<boolean> {
     const config = new MatDialogConfig();
     config.data = {
-      title : title,
-      content : content,
-      iconName : 'highlight_off',
-      dialogPattern : 'error'
+      title: title,
+      content: content,
+      iconName: 'highlight_off',
+      dialogPattern: 'error'
     };
-    const ref = this.dialog.open(DialogComponent , config);
+    const ref = this.dialog.open(DialogComponent, config);
     return ref.afterClosed();
   }
 
@@ -173,15 +189,15 @@ export class Dialog {
    * @returns {Observable<boolean>} true:close, undefined:ESC,Click outside the dialog
    * @memberof Dialog
    */
-  public info(title: string , content: string): Observable<boolean> {
+  public info(title: string, content: string): Observable<boolean> {
     const config = new MatDialogConfig();
     config.data = {
-      title : title,
-      content : content,
-      iconName : 'info_outline',
-      dialogPattern : 'info'
+      title: title,
+      content: content,
+      iconName: 'info_outline',
+      dialogPattern: 'info'
     };
-    const ref = this.dialog.open(DialogComponent , config);
+    const ref = this.dialog.open(DialogComponent, config);
     return ref.afterClosed();
   }
 
@@ -203,15 +219,15 @@ export class Dialog {
    * @returns {Observable<boolean>} true:close, undefined:ESC,Click outside the dialog
    * @memberof Dialog
    */
-  public warning(title: string , content: string): Observable<boolean> {
+  public warning(title: string, content: string): Observable<boolean> {
     const config = new MatDialogConfig();
     config.data = {
-      title : title,
-      content : content,
-      iconName : 'warning',
-      dialogPattern : 'warning'
+      title: title,
+      content: content,
+      iconName: 'warning',
+      dialogPattern: 'warning'
     };
-    const ref = this.dialog.open(DialogComponent , config);
+    const ref = this.dialog.open(DialogComponent, config);
     return ref.afterClosed();
   }
 }

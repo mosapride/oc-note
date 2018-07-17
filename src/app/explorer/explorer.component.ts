@@ -131,11 +131,13 @@ export class ExplorerComponent implements OnInit {
     menu.append(new menuItem({
       label: 'new folder', click: () => {
         this.ngZone.run(() => {
-          this.dialog.info('タイトル', '内容');
+          this.dialog.newFolder().subscribe(rtn => {
+            console.log(`new folder rtn=  [${rtn}]`);
+
+          });
         });
       }
     }));
-    // this.dialog.info('タイトル', '内容');
     menu.append(new menuItem({ label: 'new file', click() { console.log('item 1 clicked'); } }));
     menu.append(new menuItem({ label: 'rename', click() { console.log('item 1 clicked'); } }));
     menu.append(new menuItem({ type: 'separator' }));

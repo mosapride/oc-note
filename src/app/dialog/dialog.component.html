@@ -1,3 +1,16 @@
-<p>
-  dialog works!
-</p>
+<div mat-dialog-title>
+  <div style="display:flex; align-items :center">
+    {{buttonPosition}}
+    <i *ngIf="iconName" class="material-icons" [style.color]="defaltIconColor">{{iconName}}</i>{{title}}
+  </div>
+</div>
+
+<div *ngIf="dialogPattern === 'newfolder'">
+  <mat-dialog-content>
+    <input [(ngModel)]='data.newFile' placeholder="folder name" (keyup.enter)='onKeyEnter()' >
+  </mat-dialog-content>
+  <mat-dialog-actions [style.justify-content]="positionStyle">
+    <button class='common-button button-left' (click)="onNoClick()">cancel</button>
+    <button class='common-button button-right' [mat-dialog-close]="data.newFile">OK</button>
+  </mat-dialog-actions>
+</div>
