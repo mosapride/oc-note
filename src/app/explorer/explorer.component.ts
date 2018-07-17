@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone } from '@angular/core';
 import { ElectronService } from '../providers/electron.service';
 import { FileManager } from '../file-manager';
 import { TreeExplorer, TreeFiles } from '../tree-explorer';
@@ -6,6 +6,8 @@ import { ShareDataService, SelectFileInfo } from '../share-data.service';
 import { MessageBoxOptions } from 'electron';
 import { sep } from 'path';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { Dialog } from '../dialog/dialog.component';
+import { MatDialog } from '../../../node_modules/@angular/material';
 
 @Component({
   selector: 'app-explorer',
@@ -17,6 +19,7 @@ export class ExplorerComponent implements OnInit {
   fileManager: FileManager;
   treeExplorer: TreeExplorer;
   selectFileInfo: SelectFileInfo;
+  dialog: Dialog;
   // activeFile: string;
   messageBoxOptions: MessageBoxOptions = {
     type: 'question',
@@ -25,9 +28,17 @@ export class ExplorerComponent implements OnInit {
     buttons: ['OK', 'cancel']
   };
 
-  constructor(public es: ElectronService, public shareDataService: ShareDataService, private sanitizer: DomSanitizer) {
+  constructor(
+    public es: ElectronService,
+    public shareDataService: ShareDataService,
+    private sanitizer: DomSanitizer,
+    private matDialog: MatDialog,
+    private ngZone: NgZone
+  ) {
     this.fileManager = new FileManager(es);
     this.selectFileInfo = new SelectFileInfo();
+    this.dialog = new Dialog(matDialog);
+    console.log(this.dialog);
   }
 
   ngOnInit() {
@@ -114,9 +125,17 @@ export class ExplorerComponent implements OnInit {
   }
 
   private rightClickOnDirectory(file: TreeFiles): void {
+    // this.dialog.info('タイトル', '内容');
     const menu = new this.es.remote.Menu();
     const menuItem = this.es.remote.MenuItem;
-    menu.append(new menuItem({ label: 'new folder', click() { console.log('item 1 clicked'); } }));
+    menu.append(new menuItem({
+      label: 'new folder', click: () => {
+        this.ngZone.run(() => {
+          this.dialog.info('タイトル', '内容');
+        });
+      }
+    }));
+    // this.dialog.info('タイトル', '内容');
     menu.append(new menuItem({ label: 'new file', click() { console.log('item 1 clicked'); } }));
     menu.append(new menuItem({ label: 'rename', click() { console.log('item 1 clicked'); } }));
     menu.append(new menuItem({ type: 'separator' }));

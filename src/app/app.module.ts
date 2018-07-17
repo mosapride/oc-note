@@ -19,11 +19,14 @@ import { WebviewDirective } from './directives/webview.directive';
 
 import { AppComponent } from './app.component';
 import { HomeComponent } from './components/home/home.component';
-import { ExplorerComponent} from './explorer/explorer.component';
+import { ExplorerComponent } from './explorer/explorer.component';
 import { MenuComponent } from './menu/menu.component';
 import { MarkedComponent } from './marked/marked.component';
 import { CodemirrorComponent } from './codemirror/codemirror.component';
 import { NoSanitizePipe } from './no-sanitize.pipe';
+import { DialogComponent } from './dialog/dialog.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatDialogModule } from '@angular/material';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -39,13 +42,19 @@ export function HttpLoaderFactory(http: HttpClient) {
     MenuComponent,
     CodemirrorComponent,
     MarkedComponent,
-    NoSanitizePipe
+    NoSanitizePipe,
+    DialogComponent
+  ],
+  entryComponents: [
+    DialogComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
     HttpClientModule,
     AppRoutingModule,
+    MatDialogModule,
+    BrowserAnimationsModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
