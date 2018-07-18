@@ -20,13 +20,6 @@ export class ExplorerComponent implements OnInit {
   treeExplorer: TreeExplorer;
   selectFileInfo: SelectFileInfo;
   dialog: Dialog;
-  // activeFile: string;
-  messageBoxOptions: MessageBoxOptions = {
-    type: 'question',
-    title: '保存されていません',
-    message: '変更を破棄してよろしいですか？',
-    buttons: ['OK', 'cancel']
-  };
 
   constructor(
     public es: ElectronService,
@@ -38,7 +31,6 @@ export class ExplorerComponent implements OnInit {
     this.fileManager = new FileManager(es);
     this.selectFileInfo = new SelectFileInfo();
     this.dialog = new Dialog(matDialog);
-    console.log(this.dialog);
   }
 
   ngOnInit() {
@@ -115,8 +107,6 @@ export class ExplorerComponent implements OnInit {
   }
 
   onRightClick(tree: TreeFiles): void {
-    // https://electronjs.org/docs/api/menu
-    console.log(`tree view folder right click`);
     if (tree.isDirectory) {
       this.rightClickOnDirectory(tree);
     } else {
@@ -124,24 +114,53 @@ export class ExplorerComponent implements OnInit {
     }
   }
 
-  private rightClickOnDirectory(file: TreeFiles): void {
+  private rightClickOnDirectory(tree: TreeFiles): void {
     // this.dialog.info('タイトル', '内容');
     const menu = new this.es.remote.Menu();
     const menuItem = this.es.remote.MenuItem;
     menu.append(new menuItem({
       label: 'new folder', click: () => {
         this.ngZone.run(() => {
-          this.dialog.newFolder().subscribe(rtn => {
-            console.log(`new folder rtn=  [${rtn}]`);
-
+          this.fileManager.mkdir(this.dialog, tree, () => {
+            this.monitoringExplorer();
           });
         });
       }
     }));
-    menu.append(new menuItem({ label: 'new file', click() { console.log('item 1 clicked'); } }));
-    menu.append(new menuItem({ label: 'rename', click() { console.log('item 1 clicked'); } }));
+    menu.append(new menuItem({
+      label: 'new file', click: () => {
+        this.ngZone.run(() => {
+          this.fileManager.mkfile(this.dialog, tree, (file) => {
+            this.monitoringExplorer();
+            if (!file.match(/\.md/)) {
+              return;
+            }
+            const selectFileInfo = new SelectFileInfo(tree.path + sep + tree.name, file);
+            this.shareDataService.onNotifySelectFileInfoChanged(selectFileInfo);
+          });
+        });
+      }
+    }));
+    menu.append(new menuItem({
+      label: 'rename', click: () => {
+        this.ngZone.run(() => {
+          this.fileManager.rename(this.dialog, tree, (name) => {
+            tree.name = name;
+            this.monitoringExplorer();
+          });
+        });
+      }
+    }));
     menu.append(new menuItem({ type: 'separator' }));
-    menu.append(new menuItem({ label: 'delete', click() { console.log('item 1 clicked'); } }));
+    menu.append(new menuItem({
+      label: 'delete', click: () => {
+        this.ngZone.run(() => {
+          this.fileManager.rmdir(this.dialog, tree, () => {
+              this.monitoringExplorer();
+          });
+        });
+      }
+    }));
     menu.popup({ window: this.es.remote.getCurrentWindow() });
   }
 
@@ -181,16 +200,6 @@ export class ExplorerComponent implements OnInit {
     if (!tree.name.match(/\.md$/)) {
       this.es.shell.openItem(tree.path + sep + tree.name);
       return;
-    }
-
-    if (this.selectFileInfo.isChange()) {
-      this.es.remote.dialog.showMessageBox(
-        this.messageBoxOptions
-        , (response) => {
-          if (response !== 0) {
-            this._openFile(tree);
-          }
-        });
     } else {
       this._openFile(tree);
     }
@@ -217,7 +226,6 @@ export class ExplorerComponent implements OnInit {
     if (this.search.length !== 0) {
       const markdown = this.fileManager.grep(this.search, this.treeExplorer);
       const selectFileInfo = new SelectFileInfo(this.treeExplorer.workDirectory, 'grep');
-      console.log(this.treeExplorer.workDirectory);
       selectFileInfo.setGrepFlg();
       this.shareDataService.onNotifySelectFileInfoChanged(selectFileInfo);
       this.shareDataService.onNotifyMarkdownDataChanged(markdown);

@@ -16,8 +16,7 @@ type dialogConfig = {
   defaltButtonPosition: position,
   newFile: string,
   deleteFile: string,
-  renameOldName: string,
-  renameNewName: string
+  rename: string
 };
 
 @Component({
@@ -74,6 +73,10 @@ export class DialogComponent implements OnInit {
     this.dialogRef.close(this.data.newFile);
   }
 
+  onKeyEnterRenew() {
+    this.dialogRef.close(this.data.rename);
+  }
+
 }
 /**
  * Dialog Wrapper
@@ -110,6 +113,40 @@ export class Dialog {
     return ref.afterClosed();
   }
 
+  public newFile(): Observable<string> {
+    const config = new MatDialogConfig();
+    config.data = {
+      title: 'create file',
+      iconName: 'help_outline',
+      dialogPattern: 'newfile',
+    };
+    const ref = this.dialog.open<DialogComponent, dialogConfig, string>(DialogComponent, config);
+    return ref.afterClosed();
+  }
+
+  public rename(oldName: string): Observable<string> {
+    const config = new MatDialogConfig();
+    config.data = {
+      title: 'rename',
+      iconName: 'help_outline',
+      dialogPattern: 'rename',
+      rename: oldName
+    };
+    const ref = this.dialog.open<DialogComponent, dialogConfig, string>(DialogComponent, config);
+    return ref.afterClosed();
+  }
+
+  public deleteAlert(name: string): Observable<boolean> {
+    const config = new MatDialogConfig;
+    config.data = {
+      title: 'rename',
+      iconName: 'help_outline',
+      dialogPattern: 'delete',
+      deleteFile: name
+    };
+    const ref = this.dialog.open<DialogComponent, dialogConfig, boolean>(DialogComponent, config);
+    return ref.afterClosed();
+  }
   /**
    * 確認ダイアログ
    *

@@ -14,3 +14,43 @@
     <button class='common-button button-right' [mat-dialog-close]="data.newFile">OK</button>
   </mat-dialog-actions>
 </div>
+
+<div *ngIf="dialogPattern === 'newfile'">
+  <mat-dialog-content>
+    <input [(ngModel)]='data.newFile' placeholder="file name" (keyup.enter)='onKeyEnter()' >
+  </mat-dialog-content>
+  <mat-dialog-actions [style.justify-content]="positionStyle">
+    <button class='common-button button-left' (click)="onNoClick()">cancel</button>
+    <button class='common-button button-right' [mat-dialog-close]="data.newFile">OK</button>
+  </mat-dialog-actions>
+</div>
+
+<div *ngIf="dialogPattern === 'rename'">
+  <mat-dialog-content>
+    <input [(ngModel)]='data.rename' placeholder="file name" (keyup.enter)='onKeyEnterRenew()' >
+  </mat-dialog-content>
+  <mat-dialog-actions [style.justify-content]="positionStyle">
+    <button class='common-button button-left' (click)="onNoClick()">cancel</button>
+    <button class='common-button button-right' [mat-dialog-close]="data.rename">OK</button>
+  </mat-dialog-actions>
+</div>
+
+<div *ngIf="dialogPattern === 'info'">
+  <mat-dialog-content>
+    <div>{{data.content}}</div>
+  </mat-dialog-content>
+  <mat-dialog-actions [style.justify-content]="positionStyle">
+    <button class='common-button button-right' [mat-dialog-close]="true">OK</button>
+  </mat-dialog-actions>
+</div>
+
+<div *ngIf="dialogPattern === 'delete'">
+  <mat-dialog-content>
+    <div>Delete {{data.deleteFile}} ?</div>
+  </mat-dialog-content>
+  <mat-dialog-actions [style.justify-content]="positionStyle">
+    <button class='common-button button-left' (click)="onNoClick()">cancel</button>
+    <span style="width : 10px;"></span>
+    <button class='common-button button-right' [mat-dialog-close]="true">Yes</button>
+  </mat-dialog-actions>
+</div>

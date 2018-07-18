@@ -1,8 +1,10 @@
 import { ElectronService } from './providers/electron.service';
 import { OpenDialogOptions } from 'electron';
-import * as fs from 'fs';
+import * as fsType from 'fs';
 import { TreeExplorer, TreeFiles } from './tree-explorer';
 import { sep } from 'path';
+import { Dialog } from './dialog/dialog.component';
+const trash = require('trash');
 
 export class FileManager {
   es: ElectronService;
@@ -15,7 +17,7 @@ export class FileManager {
   dialogOption: OpenDialogOptions = {
     properties: ['openFile', 'openDirectory']
   };
-  fs: typeof fs;
+  fs: typeof fsType;
   pathSep: string;
   treeExplorer: TreeExplorer;
 
@@ -67,6 +69,87 @@ export class FileManager {
       return false;
     }
     return false;
+  }
+
+  public getFsStat(fullPath: string): fsType.Stats {
+    let rtnStats: fsType.Stats;
+    try {
+      rtnStats = this.fs.statSync(fullPath);
+    } catch (e) {
+      return rtnStats;
+    }
+    return rtnStats;
+
+  }
+
+  public mkdir(dialog: Dialog, tree: TreeFiles, callback?: () => void): void {
+    dialog.newFolder().subscribe(folder => {
+      if (!folder) {
+        return;
+      }
+      const mkfolderStat = this.getFsStat(tree.path + sep + tree.name + sep + folder);
+      if (mkfolderStat) {
+        dialog.info('exists.', `exists [${folder}]`);
+        return;
+      }
+      this.es.fs.mkdirSync(tree.path + sep + tree.name + sep + folder);
+      tree.opened = true;
+      callback();
+    });
+  }
+
+  public mkfile(dialog: Dialog, tree: TreeFiles, callback?: (file: string) => void): void {
+    dialog.newFile().subscribe(file => {
+      if (!file) {
+        return;
+      }
+      const mkfileStat = this.getFsStat(tree.path + sep + tree.name + sep + file);
+      if (mkfileStat) {
+        dialog.info('exists.', `exists [${file}]`);
+        return;
+      }
+      this.es.fs.closeSync(this.es.fs.openSync(tree.path + sep + tree.name + sep + file, 'a'));
+      tree.opened = true;
+      callback(file);
+    });
+  }
+
+  public rename(dialog: Dialog, tree: TreeFiles, callback: (file: string) => void): void {
+    dialog.rename(tree.name).subscribe(file => {
+      if (!file) {
+        return;
+      }
+      if (file === '') {
+        return;
+      }
+      if (tree.name === file) {
+        return;
+      }
+      try {
+        this.es.fs.renameSync(tree.path + sep + tree.name, tree.path + sep + file);
+      } catch (e) {
+        console.log(e);
+      }
+      callback(file);
+    });
+  }
+
+  public rmdir(dialog: Dialog, tree: TreeFiles, callback: () => void): void {
+    dialog.deleteAlert(tree.name).subscribe(rtn => {
+      if (!rtn) {
+        return;
+      }
+
+      const check = this.es.shell.moveItemToTrash(tree.path + sep + tree.name);
+      if (check) {
+        callback();
+      } else {
+        dialog.info('ERROR delete', `Delete the file could not be [${tree.name}]`);
+      }
+
+    });
+
+
   }
 
   /**
