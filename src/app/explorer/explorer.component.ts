@@ -3,7 +3,6 @@ import { ElectronService } from '../providers/electron.service';
 import { FileManager } from '../file-manager';
 import { TreeExplorer, TreeFiles } from '../tree-explorer';
 import { ShareDataService, SelectFileInfo } from '../share-data.service';
-import { MessageBoxOptions } from 'electron';
 import { sep } from 'path';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Dialog } from '../dialog/dialog.component';
@@ -19,6 +18,7 @@ export class ExplorerComponent implements OnInit {
   fileManager: FileManager;
   treeExplorer: TreeExplorer;
   selectFileInfo: SelectFileInfo;
+  selectRightInfo: TreeFiles;
   dialog: Dialog;
 
   constructor(
@@ -115,7 +115,7 @@ export class ExplorerComponent implements OnInit {
   }
 
   private rightClickOnDirectory(tree: TreeFiles): void {
-    // this.dialog.info('タイトル', '内容');
+    this.selectRightInfo = tree;
     const menu = new this.es.remote.Menu();
     const menuItem = this.es.remote.MenuItem;
     menu.append(new menuItem({
@@ -156,16 +156,57 @@ export class ExplorerComponent implements OnInit {
       label: 'delete', click: () => {
         this.ngZone.run(() => {
           this.fileManager.rmdir(this.dialog, tree, () => {
-              this.monitoringExplorer();
+            this.monitoringExplorer();
           });
         });
       }
     }));
-    menu.popup({ window: this.es.remote.getCurrentWindow() });
+    menu.popup({
+      window: this.es.remote.getCurrentWindow(), callback: () => {
+        this.selectRightInfo = undefined;
+      }
+    });
   }
 
-  private rightClickOnFile(file: TreeFiles): void {
+  private rightClickOnFile(tree: TreeFiles): void {
+    this.selectRightInfo = tree;
+    const menu = new this.es.remote.Menu();
+    const menuItem = this.es.remote.MenuItem;
+    menu.append(new menuItem({
+      label: 'rename', click: () => {
+        this.ngZone.run(() => {
+          this.fileManager.rename(this.dialog, tree, (name) => {
+            tree.name = name;
+            this.monitoringExplorer();
+          });
+        });
+      }
+    }));
+    menu.append(new menuItem({ type: 'separator' }));
+    menu.append(new menuItem({
+      label: 'delete', click: () => {
+        this.ngZone.run(() => {
+          this.fileManager.rmdir(this.dialog, tree, () => {
+            this.monitoringExplorer();
+          });
+        });
+      }
+    }));
+    menu.popup({
+      window: this.es.remote.getCurrentWindow(), callback: () => {
+        this.selectRightInfo = undefined;
+      }
+    });
+  }
 
+  isRightClick(tree: TreeFiles): boolean {
+    if (!this.selectRightInfo) {
+      return false;
+    }
+    if (tree.path === this.selectRightInfo.path && tree.name === this.selectRightInfo.name) {
+      return true;
+    }
+    return false;
   }
 
   isImage(name: string): boolean {

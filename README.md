@@ -42,3 +42,10 @@ workspace直下に`style.css`を置くとoc-noteアプリケーションに反�
   color: red;
 }
 ```
+
+### memo
+
+https://codemirror.net/demo/html5complete.html
+https://codemirror.net/demo/matchhighlighter.html
+https://codemirror.net/demo/search.html
+https://codemirror.net/demo/visibletabs.html

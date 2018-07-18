@@ -13,10 +13,10 @@
 <ng-template #rowsTemplate let-rows>
   <ng-container *ngFor="let row of rows">
     <ng-container *ngIf="row.isDirectory">
-      <div class="line" (click)="folerOnOff(row)" [style.padding-left]="10 * row.depth + 'px'" (contextmenu)="onRightClick(row)" >
+      <div class="line" (click)="folerOnOff(row)" [style.padding-left]="10 * row.depth + 'px'" (contextmenu)="onRightClick(row)">
         <img *ngIf="!row.opened" class="tree-icon" src="assets/tree-icon/baseline-folder-24px.svg" />
         <img *ngIf="row.opened" class="tree-icon" src="assets/tree-icon/baseline-folder_open-24px.svg" />
-        <span class="name">{{row.name}}</span>
+        <span class="name" [class.right-click]="isRightClick(row)">{{row.name}}</span>
       </div>
       <ng-container *ngIf="row.opened">
         <ng-container *ngTemplateOutlet="rowsTemplate; context: {$implicit: row.childTree}"></ng-container>
@@ -24,15 +24,15 @@
     </ng-container>
     <ng-container *ngIf="!row.isDirectory">
       <ng-container *ngIf="isImage(row.name)">
-        <a class="line" [href]="getLocalImageUrl(row)" [attr.data-lightbox]="getBase64LocalImageUrl(row)" [class.active]="isActive(row)" [style.padding-left]="10 * row.depth + 'px'">
+        <a class="line" (contextmenu)="onRightClick(row)" [href]="getLocalImageUrl(row)" [attr.data-lightbox]="getBase64LocalImageUrl(row)" [class.active]="isActive(row)" [style.padding-left]="10 * row.depth + 'px'">
           <img class="tree-icon" [src]="getFileIcon(row)" />
-          <span class="name">{{row.name}}</span>
+          <span class="name" [class.right-click]="isRightClick(row)">{{row.name}}</span>
         </a>
       </ng-container>
       <ng-container *ngIf="!isImage(row.name)">
-        <div class="line" (click)="openFile(row)" [class.active]="isActive(row)" [style.padding-left]="10 * row.depth + 'px'">
+        <div class="line" (contextmenu)="onRightClick(row)" (click)="openFile(row)" [class.active]="isActive(row)" [style.padding-left]="10 * row.depth + 'px'">
           <img class="tree-icon" [src]="getFileIcon(row)" />
-          <span class="name">{{row.name}}</span>
+          <span class="name" [class.right-click]="isRightClick(row)">{{row.name}}</span>
         </div>
       </ng-container>
     </ng-container>

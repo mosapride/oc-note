@@ -84,16 +84,18 @@ export class CodemirrorComponent implements AfterContentInit, OnDestroy {
 
   }
 
-  private updateCodeMirror(code: any, data: string) {
-    const cm = this.instance;
+  private updateCodeMirror(instance: any, data: string) {
+    const cm = instance;
     const doc = cm.getDoc();
-    const cursor = doc.getCursor(); // gets the line number in the cursor position
-    const line = doc.getLine(cursor.line); // get the line contents
-    const pos = { // create a new object to avoid mutation of the original selection
-      line: cursor.line,
-      ch: line.length - 1 // set the character position to the end of the line
-    };
-    doc.replaceRange('\n' + data, pos); // adds a new line
+    // const cursor = doc.getCursor();
+    // const line = doc.getLine(cursor.line);
+    // const pos = {
+    //   line: cursor.line,
+    //   ch: line.length - 1
+    // };
+    // doc.replaceRange('\n' + data, pos);
+
+    doc.replaceSelection(data);
   }
 
   ngOnDestroy() {
@@ -150,11 +152,6 @@ export class CodemirrorComponent implements AfterContentInit, OnDestroy {
       return;
     }
 
-    // if (this.saveFileLastName !== this.selectFileInfo.getFullPathFilename()) {
-    //   this.saveFileLastName = this.selectFileInfo.getFullPathFilename();
-    //   return;
-    // }
-
     this.timeoutInstance = setTimeout(() => {
       if (this.saveFileLastName !== this.selectFileInfo.getFullPathFilename()) {
         this.saveFileLastName = this.selectFileInfo.getFullPathFilename();
@@ -167,6 +164,6 @@ export class CodemirrorComponent implements AfterContentInit, OnDestroy {
   }
 
   private callbackSaved(): void {
-    console.log(`saved`);
+
   }
 }
