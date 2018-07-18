@@ -11,9 +11,6 @@ export class FileManager {
   ipc: Electron.IpcRenderer;
   dialog: Electron.Dialog;
   private fileList: string[];
-  private asyncfindAllStartTime: Date;
-  private asyncCallBackFlg: boolean;
-  private ASYNC_TIME_OUT_MS = 3000;
   dialogOption: OpenDialogOptions = {
     properties: ['openFile', 'openDirectory']
   };
