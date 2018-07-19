@@ -7,6 +7,7 @@ import { sep } from 'path';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Dialog } from '../dialog/dialog.component';
 import { MatDialog } from '../../../node_modules/@angular/material';
+import { AppConfig } from '../app-config';
 
 @Component({
   selector: 'app-explorer',
@@ -40,6 +41,15 @@ export class ExplorerComponent implements OnInit {
         this.openFolder(this.selectFileInfo.path);
       }
     );
+
+    const wd = new AppConfig(this.es).getWorkDirectory();
+    if (wd) {
+      this.treeExplorer = this.fileManager.find(wd);
+      if (this.fileManager.isStatFile(this.treeExplorer.workDirectory + sep + 'style.css')) {
+        document.getElementById('cs_viewer')['href'] = `${this.treeExplorer.workDirectory}${sep}style.css#0`;
+      }
+      this.openFolder(wd);
+    }
   }
 
   private openFolder(path: string): void {
@@ -91,6 +101,8 @@ export class ExplorerComponent implements OnInit {
     if (this.fileManager.isStatFile(this.treeExplorer.workDirectory + sep + 'style.css')) {
       document.getElementById('cs_viewer')['href'] = `${this.treeExplorer.workDirectory}${sep}style.css`;
     }
+    const appconfig = new AppConfig(this.es);
+    appconfig.setWorkDirectory(this.treeExplorer.workDirectory);
   }
 
   /**
@@ -314,4 +326,5 @@ export class ExplorerComponent implements OnInit {
       this._closeFolder(t);
     }
   }
-}
+
+ }
