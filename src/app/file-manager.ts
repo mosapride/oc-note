@@ -4,7 +4,6 @@ import * as fsType from 'fs';
 import { TreeExplorer, TreeFiles } from './tree-explorer';
 import { sep } from 'path';
 import { Dialog } from './dialog/dialog.component';
-const trash = require('trash');
 
 export class FileManager {
   es: ElectronService;
