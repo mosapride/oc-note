@@ -119,6 +119,14 @@ export class ExplorerComponent implements OnInit {
     const menu = new this.es.remote.Menu();
     const menuItem = this.es.remote.MenuItem;
     menu.append(new menuItem({
+      label: 'open explorer', click: () => {
+        this.ngZone.run(() => {
+          this.es.shell.showItemInFolder(tree.path + sep + tree.name);
+        });
+      }
+    }));
+    menu.append(new menuItem({ type: 'separator' }));
+    menu.append(new menuItem({
       label: 'new folder', click: () => {
         this.ngZone.run(() => {
           this.fileManager.mkdir(this.dialog, tree, () => {
@@ -172,6 +180,14 @@ export class ExplorerComponent implements OnInit {
     this.selectRightInfo = tree;
     const menu = new this.es.remote.Menu();
     const menuItem = this.es.remote.MenuItem;
+    menu.append(new menuItem({
+      label: 'open explorer', click: () => {
+        this.ngZone.run(() => {
+          this.es.shell.showItemInFolder(tree.path + sep + tree.name);
+        });
+      }
+    }));
+    menu.append(new menuItem({ type: 'separator' }));
     menu.append(new menuItem({
       label: 'rename', click: () => {
         this.ngZone.run(() => {
