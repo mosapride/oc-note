@@ -153,6 +153,12 @@ export class CodemirrorComponent implements AfterContentInit, OnDestroy {
     }
 
     this.timeoutInstance = setTimeout(() => {
+      if (!this.selectFileInfo) {
+        return;
+      }
+      if (this.selectFileInfo.name === undefined || this.selectFileInfo.name === '') {
+        return;
+      }
       if (this.saveFileLastName !== this.selectFileInfo.getFullPathFilename()) {
         this.saveFileLastName = this.selectFileInfo.getFullPathFilename();
         return;
