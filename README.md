@@ -49,3 +49,6 @@ https://codemirror.net/demo/html5complete.html
 https://codemirror.net/demo/matchhighlighter.html
 https://codemirror.net/demo/search.html
 https://codemirror.net/demo/visibletabs.html
+
+
+https://javascript.programmer-reference.com/javascript-setselectionrange-fromto/
