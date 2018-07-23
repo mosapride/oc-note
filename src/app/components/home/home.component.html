@@ -22,11 +22,7 @@
   </div>
 </div>
 
+<div [class]="findStype">
+  <input class="find-input" id='find' type="text" [(ngModel)]="findText" (keyup.enter)="find()" placeholder="search" (keyup.escape)='closeFind()'><a class="close" (click)='closeFind()'>✕</a>
+</div>
 
-<!-- <div class="container">
-  <app-tree-view></app-tree-view>
-  <h1 class="title">
-    {{ 'PAGES.HOME.TITLE' | translate }} {{message}}
-  </h1>
-  <button (click)="erTest()">test aaba</button>
-</div> -->

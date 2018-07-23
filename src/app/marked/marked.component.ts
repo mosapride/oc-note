@@ -1,11 +1,11 @@
-import { Component, OnInit, HostListener, ViewChild, ElementRef } from '@angular/core';
-import { ShareDataService, SelectFileInfo } from '../share-data.service';
-import * as marked from 'marked';
+import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import * as hljs from 'highlight.js';
+import * as marked from 'marked';
+import { sep as sep } from 'path';
 import { FileManager } from '../file-manager';
 import { ElectronService } from '../providers/electron.service';
+import { SelectFileInfo, ShareDataService } from '../share-data.service';
 import { MarkedHistory } from './marked-history';
-import { sep as sep } from 'path';
 
 @Component({
   selector: 'app-marked',
@@ -14,7 +14,7 @@ import { sep as sep } from 'path';
 })
 export class MarkedComponent implements OnInit {
   @ViewChild('menu') menu: ElementRef;
-  @ViewChild('contents') contents: ElementRef;
+  @ViewChild('contents') contents: ElementRef<any>;
   markdown = '';
   html = '';
   public markRender = new marked.Renderer();
@@ -22,7 +22,6 @@ export class MarkedComponent implements OnInit {
   public selectFileInfo: SelectFileInfo;
   public history: MarkedHistory;
   public scrollDownFlg = false;
-  public search = '';
 
   public markOtion: marked.MarkedOptions = {
     highlight: function (str, lang) {
@@ -208,12 +207,6 @@ export class MarkedComponent implements OnInit {
     console.log(this.contents);
   }
 
-  doSearch() {
-    if (this.search.length === 0) {
-      this.es.remote.getCurrentWebContents().stopFindInPage('clearSelection');
-      return;
-    }
-    this.es.remote.getCurrentWebContents().findInPage(this.search);
-  }
+
 }
 

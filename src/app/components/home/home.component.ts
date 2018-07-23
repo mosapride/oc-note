@@ -1,6 +1,8 @@
-import { Component, OnInit, ViewChild, ElementRef, HostListener } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, HostListener, Input, NgZone } from '@angular/core';
 import { ElectronService } from '../../providers/electron.service';
 import { MessageBoxOptions } from 'electron';
+
+type findStyleType = ('find-open' | 'find-close');
 
 @Component({
   selector: 'app-home',
@@ -8,13 +10,50 @@ import { MessageBoxOptions } from 'electron';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
+  findStype: findStyleType = 'find-close';
+  findText = '';
+  findFlg = false;
 
   public resizeStyle: ResizeStyle;
   message = 0;
   isProtect = false;
   resizeExplolerMarkdownFlg = false;
   resizeMainFlg = false;
-  constructor(public es: ElectronService) { }
+
+
+  constructor(public es: ElectronService, private ngZone: NgZone) {
+    // es.app.on('ready', () => {
+    //   es.globalShortcut.register('CommandOrControl+F', () => {
+    //     console.log('CommandOrControl+F');
+    //   });
+
+    // });
+    window.addEventListener('keydown', (e) => {
+      this.ngZone.run(() => {
+        if (e.keyCode === 114 || (e.ctrlKey && e.keyCode === 70)) {
+          if (this.findStype === 'find-open') {
+            this.closeFind();
+          } else {
+            this.findStype = 'find-open';
+            setTimeout(() => {
+              document.getElementById('find').focus();
+            }, 10);
+          }
+        }
+
+        if (e.keyCode === 27) {
+          if (this.findStype === 'find-open') {
+            this.closeFind();
+          }
+        }
+
+        if (this.findFlg && e.keyCode === 13) {
+          this.find();
+        }
+      });
+    });
+
+  }
 
   // @ViewChild('bar1') bar1: ElementRef;
   // @ViewChild('bar2') bar2: ElementRef;
@@ -71,6 +110,19 @@ export class HomeComponent implements OnInit {
     this.isProtect = true;
     this.resizeMainFlg = true;
   }
+
+  find() {
+    if (!this.findFlg) {
+      this.findFlg = true;
+    }
+    this.es.remote.getCurrentWebContents().findInPage(this.findText);
+  }
+
+  closeFind() {
+    this.findStype = 'find-close';
+    this.findFlg = false;
+    this.es.remote.getCurrentWebContents().stopFindInPage('clearSelection');
+  }
 }
 
 class ResizeStyle {
@@ -86,4 +138,6 @@ class ResizeStyle {
   getExplolerWidth(): string {
     return (this.explolerLeftBarX - 5) + 'px';
   }
+
+
 }

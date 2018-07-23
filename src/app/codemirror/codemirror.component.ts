@@ -39,7 +39,9 @@ export class CodemirrorComponent implements AfterContentInit, OnDestroy {
       lineWrapping: true,
       value: this.markdown,
       theme: 'default',
-      extraKeys: { 'Enter': 'newlineAndIndentContinueMarkdownList', 'Ctrl-F': 'findPersistent', 'Cmd-F': 'findPersistent' },
+      extraKeys: {
+        'Enter': 'newlineAndIndentContinueMarkdownList',
+      },
     });
 
 

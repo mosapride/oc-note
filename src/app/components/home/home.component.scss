@@ -1,5 +1,4 @@
 $top-height: 0px;
-
 .container {
   height: 100%;
   display: flex;
@@ -72,7 +71,8 @@ $top-height: 0px;
         left: -3px;
         z-index: 10;
       }
-      &:hover, &:active {
+      &:hover,
+      &:active {
         cursor: w-resize;
       }
     }
@@ -104,4 +104,40 @@ $top-height: 0px;
   -khtml-user-select: none;
   -webkit-user-drag: none;
   -khtml-user-drag: none;
+}
+
+.find-open {
+  background-color: white;
+  border: solid 1px rgba(0, 0, 0, 0.3);
+  z-index: 999;
+  width: auto;
+  padding: 10px 20px 10px 3px;
+  position: fixed;
+  top: 0;
+  right: 0;
+  .find-input {
+    width : auto;
+  }
+  .close {
+    background: none;
+    box-shadow: none;
+    display: inline-block;
+    margin-left: 5px;
+    text-decoration: none;
+    color: gray;
+    border: solid 2px gray;
+    border-radius: 3px;
+    transition: .4s;
+    font-size: 15px;
+    width: 30px;
+    text-align: -webkit-center;
+    &:hover {
+      background: gray;
+      color: white;
+    }
+  }
+}
+
+.find-close {
+  display: none;
 }
