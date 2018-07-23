@@ -52,3 +52,11 @@ https://codemirror.net/demo/visibletabs.html
 
 
 https://javascript.programmer-reference.com/javascript-setselectionrange-fromto/
+
+## Dev mode
+
+main.ts
+
+```ts
+win.webContents.openDevTools();
+````
