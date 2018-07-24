@@ -21,11 +21,15 @@ $top-height: 0px;
     left: 0;
     bottom: 0;
     width: 250px;
-    overflow-y: auto;
+    overflow-y: unset;
     /* エクスプローラーは横軸のスクロールを有効にするためにmax-widthの指定が必要 */
     .section-explorer-scroll-width {
       width: auto;
       max-width: 800px;
+      height: 100%;
+      width: 100%;
+      position: absolute;
+      overflow-y: unset;
     }
     /* エクスプローラーを横スクロールを有効にするために改行を許可しない */
     .section-explorer-scroll-width>* {
@@ -116,7 +120,7 @@ $top-height: 0px;
   top: 0;
   right: 0;
   .find-input {
-    width : auto;
+    width: auto;
   }
   .close {
     background: none;

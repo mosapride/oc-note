@@ -1,12 +1,14 @@
 <div class="workspace">
   <div class="line">
-    <a class="input-flat" (click)="openWorkSpace()">open work space</a>
-    <img title="reload explorer" src="assets/sync.svg" class="icon-sync" (click)="monitoringExplorer()" />
-    <img title="close folder" src="assets/close.svg" class="icon-close" (click)="closeFolder()" />
+    <a class="open-work-space" (click)="openWorkSpace()">open work space</a>
   </div>
 
   <div>
     <input type="text" placeholder="grep" [(ngModel)]="search" class="search" (keydown.enter)="doSearch()">
+  </div>
+  <div class="line">
+    <img title="reload explorer" src="assets/sync.svg" class="icon-sync" (click)="monitoringExplorer()" />
+    <img title="close folder" src="assets/close.svg" class="icon-close" (click)="closeFolder()" />
   </div>
 </div>
 
