@@ -13,12 +13,14 @@ export class ShareDataService {
    */
   private markdownData = new Subject<string>();
   private selectFileInfo = new Subject<SelectFileInfo>();
+  private codemirrorTheme = new Subject<string>();
 
   /**
    * Subscribe するためのプロパティ
    */
   public markdownData$ = this.markdownData.asObservable();
   public selectFileInfo$ = this.selectFileInfo.asObservable();
+  public codemirrorTheme$ = this.codemirrorTheme.asObservable();
   constructor() { }
 
   /**
@@ -31,6 +33,10 @@ export class ShareDataService {
   public onNotifySelectFileInfoChanged(selectFileInfo: SelectFileInfo) {
     this.selectFileInfo.next(selectFileInfo);
   }
+
+  public onNotifyCodemirrorTheme(codemirrorTheme: string) {
+    this.codemirrorTheme.next(codemirrorTheme);
+  }
 }
 
 
@@ -41,7 +47,7 @@ export class SelectFileInfo {
   changeFlg = false;
   grepFlg = false;
 
-  constructor(path?: string, name?: string,  selectedFlg?: boolean, changeFlg?: boolean) {
+  constructor(path?: string, name?: string, selectedFlg?: boolean, changeFlg?: boolean) {
     if (path) {
       this.path = path;
     }

@@ -1,8 +1,19 @@
-<div class="workspace">
+<div class="workspace" #workspace>
   <div class="line">
     <a class="open-work-space" (click)="openWorkSpace()">open work space</a>
+    <img title="reload explorer" src="assets/setting.svg" class="icon-sync" (click)="clickSetting();" />
   </div>
-
+  <div *ngIf="isSetting" class="setting">
+    <div class="theme">Theme</div>
+    <div>Markdown Theme</div>
+    <select (change)="changeCodemirrorTheme($event)">
+      <option [selected]="theme === selectedCodemirrortheme" *ngFor="let theme of comdemirrorTheme" [value]="theme">{{theme}}</option>
+    </select>
+    <div>hightlight Theme</div>
+    <select (change)="changeHightTheme($event)">
+      <option [selected]="theme === selectedHightTheme" *ngFor="let theme of hightlightTheme" [value]="theme">{{theme}}</option>
+    </select>
+  </div>
   <div>
     <input type="text" placeholder="grep" [(ngModel)]="search" class="search" (keydown.enter)="doSearch()">
   </div>
@@ -10,6 +21,7 @@
     <img title="reload explorer" src="assets/sync.svg" class="icon-sync" (click)="monitoringExplorer()" />
     <img title="close folder" src="assets/close.svg" class="icon-close" (click)="closeFolder()" />
   </div>
+
 </div>
 
 <ng-template #rowsTemplate let-rows>
@@ -41,9 +53,8 @@
   </ng-container>
 </ng-template>
 
-<div class="css-treeview">
+<div class="css-treeview" #tree>
   <ng-container *ngIf="treeExplorer">
     <ng-container *ngTemplateOutlet="rowsTemplate; context: {$implicit: treeExplorer.childTree}"></ng-container>
   </ng-container>
 </div>
-

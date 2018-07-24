@@ -6,6 +6,7 @@ import { Constant } from '../constant';
 import { FileManager } from '../file-manager';
 import { ElectronService } from '../providers/electron.service';
 import { sep } from 'path';
+import { AppConfig } from '../app-config';
 declare var CodeMirror: typeof codetype;
 
 @Component({
@@ -26,9 +27,11 @@ export class CodemirrorComponent implements AfterContentInit, OnDestroy {
   SAVE_DELAY = 500;
   saveFileLastName = '';
   timeoutInstance: NodeJS.Timer = null;
+  selectedCodemirrortheme: string;
   constructor(public es: ElectronService, public shareDataService: ShareDataService) {
     this.hightlightTheme = new Constant().highlightTheme;
     this.fileManager = new FileManager(es);
+    this.selectedCodemirrortheme = new AppConfig(es).getCodemirrorTheme();
   }
 
   ngAfterContentInit() {
@@ -38,7 +41,7 @@ export class CodemirrorComponent implements AfterContentInit, OnDestroy {
       lineNumbers: true,
       lineWrapping: true,
       value: this.markdown,
-      theme: 'default',
+      theme: this.selectedCodemirrortheme,
       extraKeys: {
         'Enter': 'newlineAndIndentContinueMarkdownList',
       },
@@ -84,6 +87,11 @@ export class CodemirrorComponent implements AfterContentInit, OnDestroy {
       }
     );
 
+    this.shareDataService.codemirrorTheme$.subscribe(
+      theme => {
+        this.instance.setOption('theme', theme);
+      }
+    );
   }
 
   private updateCodeMirror(instance: any, data: string) {

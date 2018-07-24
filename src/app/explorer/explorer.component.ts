@@ -1,13 +1,14 @@
-import { Component, OnInit, NgZone } from '@angular/core';
-import { ElectronService } from '../providers/electron.service';
-import { FileManager } from '../file-manager';
-import { TreeExplorer, TreeFiles } from '../tree-explorer';
-import { ShareDataService, SelectFileInfo } from '../share-data.service';
-import { sep } from 'path';
+import { Component, ElementRef, NgZone, OnInit, ViewChild } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { Dialog } from '../dialog/dialog.component';
+import { sep } from 'path';
 import { MatDialog } from '../../../node_modules/@angular/material';
 import { AppConfig } from '../app-config';
+import { Constant } from '../constant';
+import { Dialog } from '../dialog/dialog.component';
+import { FileManager } from '../file-manager';
+import { ElectronService } from '../providers/electron.service';
+import { SelectFileInfo, ShareDataService } from '../share-data.service';
+import { TreeExplorer, TreeFiles } from '../tree-explorer';
 
 @Component({
   selector: 'app-explorer',
@@ -16,22 +17,31 @@ import { AppConfig } from '../app-config';
 })
 export class ExplorerComponent implements OnInit {
   search = '';
+  isSetting = false;
   fileManager: FileManager;
   treeExplorer: TreeExplorer;
   selectFileInfo: SelectFileInfo;
   selectRightInfo: TreeFiles;
   dialog: Dialog;
+  hightlightTheme: string[];
+  selectedHightTheme: string;
+  comdemirrorTheme: string[];
+  selectedCodemirrortheme: string;
+  @ViewChild('workspace') workspace: ElementRef;
+  @ViewChild('tree') tree: ElementRef;
 
   constructor(
     public es: ElectronService,
     public shareDataService: ShareDataService,
     private sanitizer: DomSanitizer,
-    private matDialog: MatDialog,
-    private ngZone: NgZone
+    public matDialog: MatDialog,
+    private ngZone: NgZone,
   ) {
     this.fileManager = new FileManager(es);
     this.selectFileInfo = new SelectFileInfo();
     this.dialog = new Dialog(matDialog);
+    this.hightlightTheme = new Constant().highlightTheme;
+    this.comdemirrorTheme = new Constant().codemirrorTheme;
   }
 
   ngOnInit() {
@@ -41,14 +51,28 @@ export class ExplorerComponent implements OnInit {
         this.openFolder(this.selectFileInfo.path);
       }
     );
-
-    const wd = new AppConfig(this.es).getWorkDirectory();
+    const appConfig = new AppConfig(this.es);
+    const wd = appConfig.getWorkDirectory();
     if (wd) {
       this.treeExplorer = this.fileManager.find(wd);
       if (this.fileManager.isStatFile(this.treeExplorer.workDirectory + sep + 'style.css')) {
         document.getElementById('cs_viewer')['href'] = `${this.treeExplorer.workDirectory}${sep}style.css#0`;
       }
       this.openFolder(wd);
+    }
+    this.selectedHightTheme = appConfig.getHightTheme();
+    document.getElementById('cs_highlight')['href'] = `assets/highlight.js/styles/${this.selectedHightTheme}`;
+    this.selectedCodemirrortheme = appConfig.getCodemirrorTheme();
+  }
+
+  clickSetting(): void {
+    this.isSetting = !this.isSetting;
+    if (this.isSetting) {
+      this.workspace.nativeElement.style.height = '250px';
+      this.tree.nativeElement.style.height = 'calc(100% - 250px)';
+    } else {
+      this.workspace.nativeElement.style.height = '100px';
+      this.tree.nativeElement.style.height = 'calc(100% - 100px)';
     }
   }
 
@@ -306,6 +330,9 @@ export class ExplorerComponent implements OnInit {
     if (!this.treeExplorer) {
       return;
     }
+    if (this.fileManager.isStatFile(this.treeExplorer.workDirectory + sep + 'style.css')) {
+      document.getElementById('cs_viewer')['href'] = `${this.treeExplorer.workDirectory}${sep}style.css#` + new Date().getTime();
+    }
     this.fileManager.reloadWorkDirectory(this.treeExplorer.workDirectory, this.treeExplorer, tree => { this.treeExplorer = tree; });
   }
 
@@ -327,4 +354,19 @@ export class ExplorerComponent implements OnInit {
     }
   }
 
- }
+  changeHightTheme(event: any) {
+    this.selectedHightTheme = event.target.value;
+    document.getElementById('cs_highlight')['href'] = `assets/highlight.js/styles/${this.selectedHightTheme}`;
+    const appConfig = new AppConfig(this.es);
+    appConfig.setHightTheme(this.selectedHightTheme);
+  }
+
+  changeCodemirrorTheme(event: any) {
+    this.selectedCodemirrortheme = event.target.value;
+    this.shareDataService.onNotifyCodemirrorTheme(this.selectedCodemirrortheme);
+    const appConfig = new AppConfig(this.es);
+    appConfig.setCodemirrorTheme(this.selectedCodemirrortheme);
+  }
+
+
+}
