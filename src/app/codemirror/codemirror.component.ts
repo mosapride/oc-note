@@ -28,10 +28,12 @@ export class CodemirrorComponent implements AfterContentInit, OnDestroy {
   saveFileLastName = '';
   timeoutInstance: NodeJS.Timer = null;
   selectedCodemirrortheme: string;
+  lineWrappingFlg: boolean;
   constructor(public es: ElectronService, public shareDataService: ShareDataService) {
     this.hightlightTheme = new Constant().highlightTheme;
     this.fileManager = new FileManager(es);
     this.selectedCodemirrortheme = new AppConfig(es).getCodemirrorTheme();
+    this.lineWrappingFlg = new AppConfig(es).getCodemirrorLineWrapping();
   }
 
   ngAfterContentInit() {
@@ -39,7 +41,7 @@ export class CodemirrorComponent implements AfterContentInit, OnDestroy {
     this.instance = CodeMirror.fromTextArea(this.codemirror.nativeElement, {
       mode: 'markdown',
       lineNumbers: true,
-      lineWrapping: true,
+      lineWrapping: this.lineWrappingFlg,
       value: this.markdown,
       theme: this.selectedCodemirrortheme,
       viewportMargin: Infinity,
@@ -51,7 +53,7 @@ export class CodemirrorComponent implements AfterContentInit, OnDestroy {
 
     this.instance.setSize('100%', `calc(100% - ${this.repletion.nativeElement.clientHeight}px)`);
     this.instance.on('change', (instance) => this.onChangeTextArea());
-    this.instance.on('focus', (instance) =>  instance.refresh());
+    this.instance.on('focus', (instance) => instance.refresh());
     this.instance.on('drop', (instance, event) => {
       const imageFile: { name: string, path: string } = { name: '', path: '' };
       try {
@@ -107,6 +109,14 @@ export class CodemirrorComponent implements AfterContentInit, OnDestroy {
 
   test(event: any) {
     console.log(event);
+  }
+
+  /**
+   * lineWrappingを変更する。(X軸のスクロールバーの有無)
+   */
+  changeLineWrapping() {
+    this.lineWrappingFlg = !this.lineWrappingFlg;
+    this.instance.setOption('lineWrapping', this.lineWrappingFlg);
   }
 
   /**

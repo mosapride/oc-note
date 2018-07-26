@@ -8,6 +8,7 @@ export class AppConfig {
   private C_WORK_DIRECTORY = 'workdirectory';
   private C_HIGHT_THEME = 'hightlight';
   private C_CODEMIRROR_THEME = 'codemirror';
+  private C_CODEMIRROR_LINE_WRAPPIMG = 'codemirror_line';
 
 
   private configFile: string;
@@ -65,12 +66,24 @@ export class AppConfig {
     return new Constant().codemirrorTheme[0];
   }
 
+  getCodemirrorLineWrapping(): boolean {
+    const rtn = this.read(this.C_CODEMIRROR_LINE_WRAPPIMG);
+    if (rtn === 'true') {
+      return true;
+    }
+    return false;
+  }
+
   setHightTheme(theme: string): void {
     this.write(this.C_HIGHT_THEME, theme);
   }
 
   setCodemirrorTheme(theme: string): void {
     this.write(this.C_CODEMIRROR_THEME, theme);
+  }
+
+  setCodemirrorLineWrapping(flg: boolean): void {
+    this.write(this.C_CODEMIRROR_LINE_WRAPPIMG, (flg + ''));
   }
 
   /**
