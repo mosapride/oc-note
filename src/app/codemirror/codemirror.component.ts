@@ -70,7 +70,6 @@ export class CodemirrorComponent implements AfterContentInit, OnDestroy {
     });
 
 
-
     this.shareDataService.selectFileInfo$.subscribe(
       selectFileInfo => {
         if (selectFileInfo.grepFlg) {
