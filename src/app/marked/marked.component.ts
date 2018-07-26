@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, ViewChild, Input, Output, EventEmitter } from '@angular/core';
 import * as hljs from 'highlight.js';
 import * as marked from 'marked';
 import { sep as sep } from 'path';
@@ -15,6 +15,8 @@ import { MarkedHistory } from './marked-history';
 export class MarkedComponent implements OnInit {
   @ViewChild('menu') menu: ElementRef;
   @ViewChild('contents') contents: ElementRef<any>;
+  @Output() wideFlgChange: EventEmitter<boolean>;
+  wideFlg = false;
   markdown = '';
   html = '';
   public markRender = new marked.Renderer();
@@ -89,6 +91,7 @@ export class MarkedComponent implements OnInit {
   }
 
   constructor(public es: ElectronService, public shareDataService: ShareDataService) {
+    this.wideFlgChange = new EventEmitter();
     this.fileManager = new FileManager(es);
     this.history = new MarkedHistory(shareDataService);
 
@@ -113,7 +116,7 @@ export class MarkedComponent implements OnInit {
     };
 
     // imageタグの場合末尾に#数値がある場合はlightboxとして表示する。
-    this.markRender.image = (href: string, title: string, text: string ): string => {
+    this.markRender.image = (href: string, title: string, text: string): string => {
       let optionCode = '';
 
       if (text.length === 0) {
@@ -177,6 +180,12 @@ export class MarkedComponent implements OnInit {
         }
       }
     );
+  }
+
+  changeWideFlg(): void {
+    this.wideFlg = !this.wideFlg;
+    console.log(`maked   ${this.wideFlg}`);
+    this.wideFlgChange.emit(this.wideFlg);
   }
 
   canHistoryGo(): boolean {

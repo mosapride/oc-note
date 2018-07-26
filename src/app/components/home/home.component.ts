@@ -20,14 +20,7 @@ export class HomeComponent implements OnInit {
   resizeExplolerMarkdownFlg = false;
   resizeMainFlg = false;
 
-
   constructor(public es: ElectronService, private ngZone: NgZone) {
-    // es.app.on('ready', () => {
-    //   es.globalShortcut.register('CommandOrControl+F', () => {
-    //     console.log('CommandOrControl+F');
-    //   });
-
-    // });
     window.addEventListener('keydown', (e) => {
       this.ngZone.run(() => {
         if (e.keyCode === 114 || (e.ctrlKey && e.keyCode === 70)) {
@@ -122,6 +115,18 @@ export class HomeComponent implements OnInit {
     this.findStype = 'find-close';
     this.findFlg = false;
     this.es.remote.getCurrentWebContents().stopFindInPage('clearSelection');
+  }
+
+  changeWideFlg(e: boolean) {
+    if (e) {
+      this.markdown.nativeElement.style.width = `calc(0%)`;
+      this.viewer.nativeElement.style.left = `calc(0%)`;
+      this.viewer.nativeElement.style.width = `calc(100%)`;
+    } else {
+      this.markdown.nativeElement.style.width = `calc(50%)`;
+      this.viewer.nativeElement.style.left = `calc(50%)`;
+      this.viewer.nativeElement.style.width = `calc(50%)`;
+    }
   }
 }
 
