@@ -56,7 +56,7 @@ body {
   right: 10px;
   white-space: pre;
   &::before {
-    content: " ";
+    content: "";
   }
 }
 
@@ -84,4 +84,17 @@ body {
 
 .right-click {
   color : blue;
+}
+
+
+.icon-svg-exploler {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  &.close{
+    fill: black;
+  }
+  &.open{
+    fill: gray;
+  }
 }

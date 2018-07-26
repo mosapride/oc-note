@@ -42,6 +42,7 @@ export class CodemirrorComponent implements AfterContentInit, OnDestroy {
       lineWrapping: true,
       value: this.markdown,
       theme: this.selectedCodemirrortheme,
+      viewportMargin: Infinity,
       extraKeys: {
         'Enter': 'newlineAndIndentContinueMarkdownList',
       },
@@ -50,6 +51,7 @@ export class CodemirrorComponent implements AfterContentInit, OnDestroy {
 
     this.instance.setSize('100%', `calc(100% - ${this.repletion.nativeElement.clientHeight}px)`);
     this.instance.on('change', (instance) => this.onChangeTextArea());
+    this.instance.on('focus', (instance) =>  instance.refresh());
     this.instance.on('drop', (instance, event) => {
       const imageFile: { name: string, path: string } = { name: '', path: '' };
       try {
@@ -97,20 +99,11 @@ export class CodemirrorComponent implements AfterContentInit, OnDestroy {
   private updateCodeMirror(instance: any, data: string) {
     const cm = instance;
     const doc = cm.getDoc();
-    // const cursor = doc.getCursor();
-    // const line = doc.getLine(cursor.line);
-    // const pos = {
-    //   line: cursor.line,
-    //   ch: line.length - 1
-    // };
-    // doc.replaceRange('\n' + data, pos);
-
     doc.replaceSelection(data);
   }
 
   ngOnDestroy() {
-    //  リソースリーク防止のため CommonService から subcribe したオブジェクトを破棄する
-    this.subscription.unsubscribe(); // 必要？
+    this.subscription.unsubscribe();
   }
 
   test(event: any) {

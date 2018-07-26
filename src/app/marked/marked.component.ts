@@ -39,7 +39,7 @@ export class MarkedComponent implements OnInit {
                   str += wk[i] + '\n';
                 }
               }
-              head += `<span class='highlight-title'>${title}</span><br/>`;
+              head += `<span class='highlight-title'>${title}</span><br style="line-height:22px">`;
             }
           }
           return `${head}<div class="highlight-code">${hljs.highlight(lang, str, true).value}</div></code></pre>`;

@@ -28,8 +28,18 @@
   <ng-container *ngFor="let row of rows">
     <ng-container *ngIf="row.isDirectory">
       <div class="line" (click)="folerOnOff(row)" [style.padding-left]="10 * row.depth + 'px'" (contextmenu)="onRightClick(row)">
-        <img *ngIf="!row.opened" class="tree-icon" src="assets/tree-icon/baseline-folder-24px.svg" />
-        <img *ngIf="row.opened" class="tree-icon" src="assets/tree-icon/baseline-folder_open-24px.svg" />
+        <div class="icon-svg-exploler close" *ngIf="!row.opened">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M8 5v14l11-7z" />
+            <path d="M0 0h24v24H0z" fill="none" />
+          </svg>
+        </div>
+        <div class="icon-svg-exploler open" *ngIf="row.opened">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M5.875,16h10.5V5.5L5.875,16z" />
+            <path d="M0 0h24v24H0z" fill="none" />
+          </svg>
+        </div>
         <span class="name" [class.right-click]="isRightClick(row)">{{row.name}}</span>
       </div>
       <ng-container *ngIf="row.opened">
