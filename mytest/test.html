@@ -1,0 +1,54 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+  <title>Flex Sample</title>
+  <style type="text/css">
+    .content {
+      height: 200px;
+      max-height: 200px;
+      overflow: auto;
+      display: flex;
+      flex-direction: column;
+      width : 200px;
+      background-color: brown;
+    }
+
+    .content .fixed {
+      flex-flow: column nowrap;
+      height: auto;
+      overflow-y: visible;
+    }
+
+    .content .variable {
+      flex-flow: column nowrap;
+      flex: 1;
+      overflow-y: scroll;
+    }
+
+  </style>
+  <script>
+    function test() {
+      console.log('発火');
+      var obj = document.getElementById('svgg');
+      console.log(obj);
+    }
+  </script>
+</head>
+
+<body>
+  <h1>固定と可変(Scroll有り)</h1>
+
+  <div class="content">
+    <div class="fixed">ここは固定</div>
+    <div class="variable">
+      長い文字<br>長い文字<br>長い文字<br>長い文字<br>長い文字<br>長い文字<br>長い文字<br>長い文字<br>長い文字<br>長い文字<br>長い文字<br>長い文字<br>長い文字<br>長い文字<br>長い文字<br>長い文字<br>長い文字<br>長い文字<br>
+    </div>
+  </div>
+
+  <img src="../src/assets/left.svg">
+  <object type="image/svg+xml" data="../src/assets/left.svg" width="256" height="256"></object>
+  <button id='svgg' onclick="test()">発火</button>
+</body>
+
+</html>
