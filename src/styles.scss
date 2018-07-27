@@ -77,22 +77,23 @@ body {
   outline-color: gray;
 }
 
-.right-click {
-  color: blue;
-}
-
 .icon-svg-exploler {
   display: inline-block;
+  min-width: 20px;
   width: 20px;
   height: 20px;
+  fill: gray;
   &.close {
-    fill: black;
+    fill: gray;
   }
   &.open {
     fill: gray;
   }
   &.md {
-    fill: gray;
+    fill: blue;
+    &.index {
+      fill: red;
+    }
   }
   &.img {
     fill: gray;
@@ -105,6 +106,7 @@ body {
 .icon-svg {
   display: inline-block;
   width: 30px;
+  min-width: 30px;
   height: 30px;
   fill: gray;
   &:hover {
@@ -116,6 +118,55 @@ body {
   &.wide {
     fill: gray;
   }
-
+  &.add-folder {
+    fill: gray;
+  }
+  &.add-file {
+    fill: gray;
+  }
+  &.reload {
+    fill: gray;
+  }
+  &.close {
+    fill: gray;
+  }
 }
 
+.explorer-item .name {
+  color: unset;
+  &.right-click {
+    color: pink;
+  }
+  &.index {
+    color: red;
+  }
+}
+
+.icon-svg-menu {
+  display: inline-block;
+  min-width: 20px;
+  width: 20px;
+  height: 20px;
+  fill: gray;
+  padding-left: 10px;
+  &:hover {
+    cursor: pointer;
+  }
+  &.add-folder {
+    fill: gray;
+  }
+  &.add-file {
+    fill: gray;
+  }
+  &.reload {
+    fill: gray;
+  }
+  &.close {
+    fill: gray;
+  }
+}
+
+
+#marked img.set-lightbox{
+  border: solid 1px blue;
+}

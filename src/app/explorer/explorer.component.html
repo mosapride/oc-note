@@ -18,8 +18,28 @@
     <input type="text" placeholder="grep" [(ngModel)]="search" class="search" (keydown.enter)="doSearch()">
   </div>
   <div class="line">
-    <img title="reload explorer" src="assets/sync.svg" class="icon-sync" (click)="monitoringExplorer()" />
-    <img title="close folder" src="assets/close.svg" class="icon-close" (click)="closeFolder()" />
+    <div class="icon-svg-menu add-folder" (click)="mkdirTop()" title="add folder">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
+        <path style="line-height:normal;text-indent:0;text-align:start;text-decoration-line:none;text-decoration-style:solid;text-decoration-color:#000;text-transform:none;block-progression:tb;isolation:auto;mix-blend-mode:normal" d="M 5 4 C 3.3544268 4 2 5.3555411 2 7 L 2 16 L 2 26 L 2 43 C 2 44.644459 3.3544268 46 5 46 L 32 46 A 1.0001 1.0001 0 0 0 32.027344 45.998047 C 33.856702 48.420289 36.748552 50 40 50 C 45.5 50 50 45.5 50 40 C 50 37.766393 49.247954 35.704489 47.998047 34.035156 A 1.0001 1.0001 0 0 0 48 34 L 48 11 C 48 9.3549372 46.645063 8 45 8 L 18 8 C 18.08657 8 17.96899 8.000364 17.724609 7.71875 C 17.480227 7.437136 17.179419 6.9699412 16.865234 6.46875 C 16.55105 5.9675588 16.221777 5.4327899 15.806641 4.9628906 C 15.391504 4.4929914 14.818754 4 14 4 L 5 4 z M 5 6 L 14 6 C 13.93925 6 14.06114 6.00701 14.308594 6.2871094 C 14.556051 6.5672101 14.857231 7.0324412 15.169922 7.53125 C 15.482613 8.0300588 15.806429 8.562864 16.212891 9.03125 C 16.619352 9.499636 17.178927 10 18 10 L 45 10 C 45.562937 10 46 10.437063 46 11 L 46 13.1875 C 45.685108 13.07394 45.351843 13 45 13 L 5 13 C 4.6481575 13 4.3148915 13.07394 4 13.1875 L 4 7 C 4 6.4364589 4.4355732 6 5 6 z M 5 15 L 45 15 C 45.56503 15 46 15.43497 46 16 L 46 32.027344 C 44.324674 30.761674 42.249111 30 40 30 C 34.5 30 30 34.5 30 40 C 30 41.421143 30.305196 42.772767 30.845703 44 L 5 44 C 4.4355732 44 4 43.563541 4 43 L 4 16 C 4 15.43497 4.4349698 15 5 15 z M 40 32 C 44.4 32 48 35.6 48 40 C 48 44.4 44.4 48 40 48 C 35.6 48 32 44.4 32 40 C 32 35.6 35.6 32 40 32 z M 40 34.099609 C 39.4 34.099609 39 34.499609 39 35.099609 L 39 39 L 35.099609 39 C 34.499609 39 34.099609 39.4 34.099609 40 C 34.099609 40.6 34.499609 41 35.099609 41 L 39 41 L 39 44.900391 C 39 45.500391 39.4 45.900391 40 45.900391 C 40.6 45.900391 41 45.500391 41 44.900391 L 41 41 L 44.900391 41 C 45.500391 41 45.900391 40.6 45.900391 40 C 45.900391 39.4 45.500391 39 44.900391 39 L 41 39 L 41 35.099609 C 41 34.499609 40.6 34.099609 40 34.099609 z" color="#000" font-weight="400" font-family="sans-serif" white-space="normal" overflow="visible" />
+      </svg>
+    </div>
+    <div class="icon-svg-menu add-file" (click)="mkfileTop()" title="add file">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" enable-background="new 0 0 50 50">
+        <path style="text-indent:0;text-align:start;line-height:normal;text-transform:none;block-progression:tb;-inkscape-font-specification:Bitstream Vera Sans" d="M 6 0 L 6 1 L 6 47 L 6 48 L 7 48 L 34 48 C 35.67259 49.258578 37.75197 50 40 50 C 45.511003 50 50 45.511003 50 40 C 50 35.915953 47.519577 32.394233 44 30.84375 L 44 15 L 44 14.59375 L 43.71875 14.28125 L 29.71875 0.28125 L 29.40625 0 L 29 0 L 7 0 L 6 0 z M 8 2 L 28 2 L 28 15 L 28 16 L 29 16 L 42 16 L 42 30.21875 C 41.349834 30.08524 40.688875 30 40 30 C 34.488997 30 30 34.488997 30 40 C 30 42.254919 30.765672 44.324779 32.03125 46 L 8 46 L 8 2 z M 30 3.4375 L 40.5625 14 L 30 14 L 30 3.4375 z M 40 32 C 44.430123 32 48 35.569877 48 40 C 48 44.430123 44.430123 48 40 48 C 35.569877 48 32 44.430123 32 40 C 32 35.569877 35.569877 32 40 32 z M 39 35 L 39 39 L 35 39 L 35 41 L 39 41 L 39 45 L 41 45 L 41 41 L 45 41 L 45 39 L 41 39 L 41 35 L 39 35 z" overflow="visible" enable-background="accumulate" font-family="Bitstream Vera Sans" />
+      </svg>
+    </div>
+    <div class="icon-svg-menu reload" (click)="monitoringExplorer()" title="reload explorer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z" />
+        <path d="M0 0h24v24H0z" fill="none" />
+      </svg>
+    </div>
+    <div class="icon-svg-menu close" (click)="closeFolder()" title="close folder">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path d="M0 0h24v24H0z" fill="none" />
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zM4 12c0-4.42 3.58-8 8-8 1.85 0 3.55.63 4.9 1.69L5.69 16.9C4.63 15.55 4 13.85 4 12zm8 8c-1.85 0-3.55-.63-4.9-1.69L18.31 7.1C19.37 8.45 20 10.15 20 12c0 4.42-3.58 8-8 8z" />
+      </svg>
+    </div>
   </div>
 
 </div>
@@ -62,7 +82,7 @@
         <div class="line" (contextmenu)="onRightClick(row)" (click)="openFile(row)" [class.active]="isActive(row)" [style.padding-left]="10 * row.depth + 'px'">
           <ng-container [ngSwitch]="getFileKind(row.name)">
             <ng-container *ngSwitchCase="'md'">
-              <div class="icon-svg-exploler md">
+              <div class="icon-svg-exploler md" [class.index]="row.name === 'index.md'">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                   <path fill="none" d="M0 0h24v24H0V0z" />
                   <path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z" />
@@ -78,14 +98,14 @@
               </div>
             </ng-container>
           </ng-container>
-          <span class="name" [class.right-click]="isRightClick(row)">{{row.name}}</span>
+          <span class="name" [class.right-click]="isRightClick(row)" [class.index]="row.name === 'index.md'">{{row.name}}</span>
         </div>
       </ng-container>
     </ng-container>
   </ng-container>
 </ng-template>
 
-<div class="css-treeview" #tree>
+<div class="explorer-item" #tree>
   <ng-container *ngIf="treeExplorer">
     <ng-container *ngTemplateOutlet="rowsTemplate; context: {$implicit: treeExplorer.childTree}"></ng-container>
   </ng-container>

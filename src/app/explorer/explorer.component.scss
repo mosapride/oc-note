@@ -87,7 +87,7 @@ $top-height: 100px;
   background-color: darkgrey;
 }
 
-.css-treeview {
+.explorer-item {
   font: normal 13px "Segoe UI", Arial, Sans-serif; // color : white;
   overflow-y: auto;
   height: calc(100% - #{$top-height});

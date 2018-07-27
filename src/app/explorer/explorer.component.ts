@@ -379,5 +379,32 @@ export class ExplorerComponent implements OnInit {
     appConfig.setCodemirrorTheme(this.selectedCodemirrortheme);
   }
 
+  mkdirTop(): void {
+    if (!this.treeExplorer) {
+      return;
+    }
+
+    if (this.treeExplorer.workDirectory === '') {
+      return;
+    }
+
+    this.fileManager.mkdirTop(this.dialog, this.treeExplorer.workDirectory, () => {
+      this.monitoringExplorer();
+    });
+  }
+
+  mkfileTop(): void {
+    if (!this.treeExplorer) {
+      return;
+    }
+
+    if (this.treeExplorer.workDirectory === '') {
+      return;
+    }
+
+    this.fileManager.mkfileTop(this.dialog, this.treeExplorer.workDirectory, () => {
+      this.monitoringExplorer();
+    });
+  }
 
 }

@@ -130,7 +130,7 @@ export class MarkedComponent implements OnInit {
 
       if (href.match(/^http/) || href.match('//')) {
         if (optionCode !== '') {
-          return `<a href="${href}" data-lightbox="${text}"><img src="${href}" style="width : ${optionCode}px"></a>`;
+          return `<a href="${href}" data-lightbox="${text}"><img src="${href}" style="width : ${optionCode}px" class="set-lightbox"></a>`;
         }
         return `<image src="${href}" alt="${text}" />`;
       }
@@ -140,7 +140,7 @@ export class MarkedComponent implements OnInit {
 
       if (optionCode !== '') {
         // tslint:disable-next-line:max-line-length
-        return `<a href="${this.selectFileInfo.path + sep + href}" data-lightbox="${text}"><image src="${this.selectFileInfo.path + sep + href}" alt="${text}"  style="width : ${optionCode}px" /></a>`;
+        return `<a href="${this.selectFileInfo.path + sep + href}" data-lightbox="${text}"><image src="${this.selectFileInfo.path + sep + href}" alt="${text}"  style="width : ${optionCode}px" class="set-lightbox" /></a>`;
       }
       return `<image src="${this.selectFileInfo.path + sep + href}" alt="${text}" />`;
     };
@@ -216,6 +216,20 @@ export class MarkedComponent implements OnInit {
     console.log(this.contents);
   }
 
+  onDragOver(evt) {
+    evt.preventDefault();
+    evt.stopPropagation();
+  }
+
+  onDragLeave(evt) {
+    evt.preventDefault();
+    evt.stopPropagation();
+  }
+
+  onDrop(evt) {
+    evt.preventDefault();
+    evt.stopPropagation();
+  }
 
 }
 

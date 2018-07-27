@@ -1,14 +1,15 @@
-<div class="menu" #menu>
-  <img title="history back" src="assets/left.svg" class="history-icon" [class.disable]="!canHistoryBack()" (click)="doHistoryBack()">
-  <img title="hitory go" src="assets/right.svg" class="history-icon" [class.disable]="!canHistoryGo()" (click)="doHistoryGo()">/
-  <img title="auto scroll down" src="assets/down.svg" class="icon" [class.disable]="!scrollDownFlg" (click)="doScrollDown()">/
-  <div class="icon-svg wide" (click)="changeWideFlg()">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-      <path d="M0 0h24v24H0z" fill="none"/>
-      <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
-  </svg>
-
+<div id="marked" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)" (drop)="onDrop($event)">
+  <div class="menu" #menu (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)" (drop)="onDrop($event)">
+    <img title="history back" src="assets/left.svg" class="history-icon" [class.disable]="!canHistoryBack()" (click)="doHistoryBack()">
+    <img title="hitory go" src="assets/right.svg" class="history-icon" [class.disable]="!canHistoryGo()" (click)="doHistoryGo()">/
+    <img title="auto scroll down" src="assets/down.svg" class="icon" [class.disable]="!scrollDownFlg" (click)="doScrollDown()">/
+    <div class="icon-svg wide" (click)="changeWideFlg()">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path d="M0 0h24v24H0z" fill="none" />
+        <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z" />
+      </svg>
+    </div>
   </div>
-</div>
-<div #contents class="contents" [innerHTML]='html | noSanitize'>
+  <div #contents class="contents" [innerHTML]='html | noSanitize'  (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)" (drop)="onDrop($event)">
+  </div>
 </div>

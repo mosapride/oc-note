@@ -94,6 +94,22 @@ export class FileManager {
     });
   }
 
+  public mkdirTop(dialog: Dialog, workDirectory: string, callback?: () => void): void {
+    dialog.newFolder().subscribe(folder => {
+      if (!folder) {
+        return;
+      }
+      const mkfolderStat = this.getFsStat(workDirectory + sep + folder);
+      if (mkfolderStat) {
+        dialog.info('exists.', `exists [${folder}]`);
+        return;
+      }
+      this.es.fs.mkdirSync(workDirectory + sep + folder);
+      callback();
+    });
+  }
+
+
   public mkfile(dialog: Dialog, tree: TreeFiles, callback?: (file: string) => void): void {
     dialog.newFile().subscribe(file => {
       if (!file) {
@@ -106,6 +122,21 @@ export class FileManager {
       }
       this.es.fs.closeSync(this.es.fs.openSync(tree.path + sep + tree.name + sep + file, 'a'));
       tree.opened = true;
+      callback(file);
+    });
+  }
+
+  public mkfileTop(dialog: Dialog, workDirectory: string, callback?: (file: string) => void): void {
+    dialog.newFile().subscribe(file => {
+      if (!file) {
+        return;
+      }
+      const mkfileStat = this.getFsStat(workDirectory + sep + file);
+      if (mkfileStat) {
+        dialog.info('exists.', `exists [${file}]`);
+        return;
+      }
+      this.es.fs.closeSync(this.es.fs.openSync(workDirectory + sep + file, 'a'));
       callback(file);
     });
   }

@@ -139,7 +139,7 @@ export class Dialog {
   public deleteAlert(name: string): Observable<boolean> {
     const config = new MatDialogConfig;
     config.data = {
-      title: 'rename',
+      title: 'delete',
       iconName: 'help_outline',
       dialogPattern: 'delete',
       deleteFile: name
