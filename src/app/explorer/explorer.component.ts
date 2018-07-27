@@ -289,6 +289,17 @@ export class ExplorerComponent implements OnInit {
     return rtnSrc + 'baseline-info-24px.svg';
   }
 
+  getFileKind(fileName: string): ('md' | 'img' | 'other') {
+    if (fileName.match(/\.md$/)) {
+      return 'md';
+    }
+    if (fileName.match(/\.png$|\.jpeg$|\.gif$|\.bmp$|\.jpg$|\.tiff$|\.tif$/)) {
+      return 'img';
+    }
+    return 'other';
+  }
+
+
   openFile(tree: TreeFiles): void {
     if (!tree.name.match(/\.md$/)) {
       this.es.shell.openItem(tree.path + sep + tree.name);

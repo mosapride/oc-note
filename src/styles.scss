@@ -91,6 +91,15 @@ body {
   &.open {
     fill: gray;
   }
+  &.md {
+    fill: gray;
+  }
+  &.img {
+    fill: gray;
+  }
+  &.other {
+    fill: gray;
+  }
 }
 
 .icon-svg {
@@ -105,6 +114,8 @@ body {
     fill: black;
   }
   &.wide {
-    fill:gray;
+    fill: gray;
   }
+
 }
+
