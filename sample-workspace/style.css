@@ -1,0 +1,240 @@
+.highlight-title {
+  position: absolute;
+  background-color: gray;
+  color: white;
+  left: 0;
+  right: 10px;
+  white-space: pre;
+}
+
+.highlight-title::before {
+  content: "";
+}
+
+.highlight-code {
+  padding-left: 0.5em;
+}
+
+.external-link::after {
+  content: "↗";
+}
+
+.internal-link {
+  color: -webkit-link;
+}
+
+.no-link {
+  color: red;
+}
+
+:focus {
+  outline-color: gray;
+}
+
+.icon-svg-exploler {
+  display: inline-block;
+  min-width: 20px;
+  width: 20px;
+  height: 20px;
+  fill: gray;
+}
+
+.icon-svg-exploler.close {
+  fill: gray;
+}
+
+.icon-svg-exploler.open {
+  fill: gray;
+}
+
+.icon-svg-exploler.md {
+  fill: blue;
+}
+
+.icon-svg-exploler.md.index {
+  fill: red;
+}
+
+.icon-svg-exploler.img {
+  fill: gray;
+}
+
+.icon-svg-exploler.other {
+  fill: gray;
+}
+
+.icon-svg {
+  display: inline-block;
+  width: 30px;
+  min-width: 30px;
+  height: 30px;
+  fill: gray;
+}
+
+.icon-svg:hover {
+  cursor: pointer;
+}
+
+.icon-svg.toggle {
+  fill: black;
+}
+
+.icon-svg.wide {
+  fill: gray;
+}
+
+.icon-svg.add-folder {
+  fill: gray;
+}
+
+.icon-svg.add-file {
+  fill: gray;
+}
+
+.icon-svg.reload {
+  fill: gray;
+}
+
+.icon-svg.close {
+  fill: gray;
+}
+
+.explorer-item .name {
+  color: unset;
+}
+
+.explorer-item .name.right-click {
+  color: pink;
+}
+
+.explorer-item .name.index {
+  color: red;
+}
+
+.icon-svg-menu {
+  display: inline-block;
+  min-width: 20px;
+  width: 20px;
+  height: 20px;
+  fill: gray;
+  padding-left: 10px;
+}
+
+.icon-svg-menu:hover {
+  cursor: pointer;
+}
+
+.icon-svg-menu.add-folder {
+  fill: gray;
+}
+
+.icon-svg-menu.add-file {
+  fill: gray;
+}
+
+.icon-svg-menu.reload {
+  fill: gray;
+}
+
+.icon-svg-menu.close {
+  fill: gray;
+}
+
+#marked img.set-lightbox {
+  border: solid 1px blue;
+}
+
+#marked h1 {
+  color :gray;
+}
+
+#marked h2 {
+  color :gray;
+}
+
+#marked h3 {
+  color :gray;
+}
+
+#marked h4 {
+  color :gray;
+}
+
+#marked h4 {
+  color :gray;
+}
+
+#marked table {
+  font-family: verdana, arial, sans-serif;
+  font-size: 11px;
+  color: #333333;
+  border-width: 1px;
+  border-color: #3A3A3A;
+  border-collapse: collapse;
+}
+
+#marked table th {
+  border-width: 1px;
+  padding: 8px;
+  border-style: solid;
+  border-color: darkgray;
+  background-color: gray;
+  color: #ffffff;
+}
+
+#marked table tr:nth-child(even) td {
+  background-color: whitesmoke;
+}
+
+#marked table td {
+  border-width: 1px;
+  padding: 8px;
+  border-style: solid;
+  border-color: darkgray;
+  background-color: #ffffff;
+}
+
+
+body {
+  padding-left: 50px;
+  counter-reset: _c_h2 0;
+  counter-reset: _c_h3 0;
+  counter-reset: _c_h4 0;
+  counter-reset: _c_h5 0;
+  font-family: sans-serif;
+}
+
+h2::before {
+  content: counter(_c_h2) ". ";
+}
+
+h2 {
+  counter-increment: _c_h2 1;
+  counter-reset: _c_h3 0;
+}
+
+h3::before {
+  content: counter(_c_h2) "." counter(_c_h3) ". ";
+}
+
+h3 {
+  counter-increment: _c_h3;
+  counter-reset: _c_h4 0;
+}
+
+h4::before {
+  content: counter(_c_h2) "." counter(_c_h3) "." counter(_c_h4) ". ";
+}
+
+h4 {
+  counter-increment: _c_h4;
+  counter-reset: _c_h5 0;
+}
+
+h5::before {
+  content: counter(_c_h2) "." counter(_c_h3) "." counter(_c_h4) "." counter(_c_h5) ". ";
+}
+
+h5 {
+  counter-increment: _c_h5;
+}
