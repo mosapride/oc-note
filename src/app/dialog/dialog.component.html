@@ -44,6 +44,15 @@
   </mat-dialog-actions>
 </div>
 
+<div *ngIf="dialogPattern === 'error'">
+  <mat-dialog-content>
+    <div>{{data.content}}</div>
+  </mat-dialog-content>
+  <mat-dialog-actions [style.justify-content]="positionStyle">
+    <button class='common-button button-right' [mat-dialog-close]="true">OK</button>
+  </mat-dialog-actions>
+</div>
+
 <div *ngIf="dialogPattern === 'delete'">
   <mat-dialog-content>
     <div>Delete {{data.deleteFile}} ?</div>
