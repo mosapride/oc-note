@@ -50,7 +50,8 @@ export class MarkedComponent implements OnInit {
         }
       }
       // return '<pre class="hljs"><code>' + str + '</code></pre>';
-      return hljs.highlightAuto(str, [lang]).value;
+      // return hljs.highlightAuto(str, [lang]).value;
+      return `<pre class="hljs highlight-padding"><div class="highlight-code">${hljs.highlightAuto(str).value}</div></pre>`;
     }
 
   };

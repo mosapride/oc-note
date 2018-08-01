@@ -13,6 +13,14 @@ npm install
 npm start
 ```
 
+### Dev mode
+
+main.ts
+
+```ts
+win.webContents.openDevTools();
+````
+
 ## The main framework you are using
 
 * [maximegris/angular-electron](https://github.com/maximegris/angular-electron)
@@ -21,42 +29,6 @@ npm start
 * [lokesh/lightbox2](https://github.com/lokesh/lightbox2)
 * [isagalaev/highlight.js](https://github.com/isagalaev/highlight.js)
 
-## CSSのカスタマイズ
+## License
 
-workspace直下に`style.css`を置くとoc-noteアプリケーションに反映される。(要：アプリ再起動)
-
-### 特殊なclass(defalt)
-
-```css
-.external-link {
-  &::after {
-    content: "↗";
-  }
-}
-
-.internal-link {
-  color: -webkit-link;
-}
-
-.no-link {
-  color: red;
-}
-```
-
-### memo
-
-https://codemirror.net/demo/html5complete.html
-https://codemirror.net/demo/matchhighlighter.html
-https://codemirror.net/demo/search.html
-https://codemirror.net/demo/visibletabs.html
-
-
-https://javascript.programmer-reference.com/javascript-setselectionrange-fromto/
-
-## Dev mode
-
-main.ts
-
-```ts
-win.webContents.openDevTools();
-````
+MIT
