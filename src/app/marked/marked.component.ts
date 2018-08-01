@@ -49,9 +49,23 @@ export class MarkedComponent implements OnInit {
           return `<pre><code><div class="highlight-code">${hljs.highlight(lang, str, true).value}</div></code></pre>`;
         }
       }
-      // return '<pre class="hljs"><code>' + str + '</code></pre>';
-      // return hljs.highlightAuto(str, [lang]).value;
+      if (str) {
+        let title = str.split(/\n|\r\n|\r/)[0];
+        if (title.indexOf('title:') === 0) {
+          title = title.replace('title:', '');
+          const wk = str.split(/\n|\r\n|\r/);
+          str = '';
+          for (let i = 1; i <= wk.length; i++) {
+            if (typeof wk[i] !== 'undefined') {
+              str += wk[i] + '\n';
+            }
+          }
+          head += ``;
+          return `<pre class="hljs highlight-padding"><span class='highlight-title'>${title}</span><br style="line-height:22px"><div class="highlight-code">${hljs.highlightAuto(str).value}</div></pre>`;
+        }
+      }
       return `<pre class="hljs highlight-padding"><div class="highlight-code">${hljs.highlightAuto(str).value}</div></pre>`;
+      // return '';
     }
 
   };
