@@ -224,12 +224,12 @@ export class FileManager {
   }
 
 
-  public reloadWorkDirectory(workDirectory: string, oldTreeExplorer: TreeExplorer, callback: (tree: TreeExplorer) => void): void {
+  public reloadWorkDirectory(workDirectory: string, oldTreeExplorer: TreeExplorer, searchedDrectoryCnt: number, callback: (tree: TreeExplorer) => void): void {
     if (!oldTreeExplorer) {
       return;
     }
 
-    const treeFiles = this.find(workDirectory);
+    const treeFiles = this.find(workDirectory, searchedDrectoryCnt);
     const openFileList = this._getOpenDirectoryList(oldTreeExplorer);
     for (const tree of treeFiles.childTree) {
       this._reloadWorkDrectory(openFileList, tree);
@@ -265,18 +265,24 @@ export class FileManager {
     }
   }
 
-  public find(path: string): TreeExplorer {
+  public find(path: string, searchedDrectoryCnt?: number): TreeExplorer {
+    if (!searchedDrectoryCnt) {
+      searchedDrectoryCnt = 5;
+    }
     const treeExplorer = new TreeExplorer(path);
-    this._find(path, treeExplorer.childTree, 0);
+    this._find(path, treeExplorer.childTree, 0, searchedDrectoryCnt);
     return treeExplorer;
   }
 
-  private _find(path: string, treeFiles: TreeFiles[], depth: number) {
+  private _find(path: string, treeFiles: TreeFiles[], depth: number, searchedDrectoryCnt?: number) {
     const names = this.fs.readdirSync(path);
     for (let counter = 0; counter < names.length; counter++) {
       if (this.fs.statSync(path + sep + names[counter]).isDirectory()) {
         treeFiles.push(new TreeFiles(path, names[counter], depth + 1, true));
-        this._find(path + sep + names[counter], treeFiles[counter].childTree, depth + 1);
+        if (depth >= searchedDrectoryCnt) {
+          continue;
+        }
+        this._find(path + sep + names[counter], treeFiles[counter].childTree, depth + 1, searchedDrectoryCnt);
       } else {
         treeFiles.push(new TreeFiles(path, names[counter], depth + 1, false));
       }

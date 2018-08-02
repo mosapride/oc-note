@@ -74,14 +74,24 @@ export class CodemirrorComponent implements AfterContentInit, OnDestroy {
 
     this.shareDataService.selectFileInfo$.subscribe(
       selectFileInfo => {
-        if (selectFileInfo.grepFlg) {
-          this.instance.getDoc().clearHistory();
-          return;
-        }
+        console.log(selectFileInfo);
+
         if (this.timeoutInstance !== null) {
           clearTimeout(this.timeoutInstance);
           this.timeoutInstance = null;
           this.saveFileLastName = '';
+        }
+        if (selectFileInfo.reWorkSpaceFlg) {
+          this.instance.getDoc().clearHistory();
+          this.markdown = '';
+          this.instance.setValue(this.markdown);
+          return;
+        }
+        if (selectFileInfo.grepFlg) {
+          this.instance.getDoc().clearHistory();
+          this.markdown = '';
+          this.instance.setValue(this.markdown);
+          return;
         }
         this.selectFileInfo = selectFileInfo;
         this.markdown = this.fileManager.fileRead(this.selectFileInfo.getFullPathFilename());

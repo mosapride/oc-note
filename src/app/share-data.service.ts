@@ -46,6 +46,7 @@ export class SelectFileInfo {
   selectedFlg = false;
   changeFlg = false;
   grepFlg = false;
+  reWorkSpaceFlg = false;
 
   constructor(path?: string, name?: string, selectedFlg?: boolean, changeFlg?: boolean) {
     if (path) {

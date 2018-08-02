@@ -166,6 +166,9 @@ export class MarkedComponent implements OnInit {
   ngOnInit() {
     this.shareDataService.selectFileInfo$.subscribe(
       selectFileInfo => {
+        if (selectFileInfo.reWorkSpaceFlg) {
+          this.history.clear();
+        }
         if (this.selectFileInfo) {
           if (this.selectFileInfo.path === selectFileInfo.path && this.selectFileInfo.name === selectFileInfo.name) {
             this.contents.nativeElement.scrollTop = 0;

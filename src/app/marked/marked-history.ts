@@ -10,6 +10,13 @@ export class MarkedHistory {
   constructor(public shareDataService: ShareDataService) {
   }
 
+  clear() {
+    this.selectFileInfoHistory = [];
+    this.selectHistoryIndex = -1;
+    this.historyBackFlg = false;
+    this.historyGoFlg = false;
+  }
+
   add(selectFileInfo: SelectFileInfo) {
 
     if (this.historyBackFlg) {
@@ -71,4 +78,5 @@ export class MarkedHistory {
     }
     return false;
   }
+
 }

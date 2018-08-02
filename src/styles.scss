@@ -135,7 +135,8 @@ body {
 .explorer-item .name {
   color: unset;
   &.right-click {
-    color: pink;
+    color: white;
+    background-color: gray;
   }
   &.index {
     color: red;
@@ -171,5 +172,6 @@ body {
 }
 
 .mouse-over {
-  background-color: aquamarine;
+  background-color: gray;
+  color:white;
 }

@@ -9,7 +9,8 @@ import { FileManager } from '../file-manager';
 import { ElectronService } from '../providers/electron.service';
 import { SelectFileInfo, ShareDataService } from '../share-data.service';
 import { TreeExplorer, TreeFiles } from '../tree-explorer';
-
+import { FSWatcher } from 'fs';
+// import * as fs from 'fs';
 @Component({
   selector: 'app-explorer',
   templateUrl: './explorer.component.html',
@@ -30,6 +31,8 @@ export class ExplorerComponent implements OnInit {
   lastHover: string;
   hoverTimer: NodeJS.Timer;
   dragFile: { path: string, sep: string, name: string };
+  fsWatcher: FSWatcher;
+  searchedDrectoryCnt = 5;
   @ViewChild('workspace') workspace: ElementRef;
   @ViewChild('tree') tree: ElementRef;
 
@@ -50,6 +53,9 @@ export class ExplorerComponent implements OnInit {
   ngOnInit() {
     this.shareDataService.selectFileInfo$.subscribe(
       selectFileInfo => {
+        if (selectFileInfo.reWorkSpaceFlg === true) {
+          return;
+        }
         this.selectFileInfo = selectFileInfo;
         this.openFolder(this.selectFileInfo.path);
       }
@@ -62,6 +68,7 @@ export class ExplorerComponent implements OnInit {
         document.getElementById('cs_viewer')['href'] = `${this.treeExplorer.workDirectory}${sep}style.css#0`;
       }
       this.openFolder(wd);
+      this.fswatch$();
     }
     this.selectedHightTheme = appConfig.getHightTheme();
     document.getElementById('cs_highlight')['href'] = `assets/highlight.js/styles/${this.selectedHightTheme}`;
@@ -90,7 +97,7 @@ export class ExplorerComponent implements OnInit {
   private _getPathPttern(path: string): string[] {
     const pathPatern: string[] = [];
     path = path.replace(this.treeExplorer.workDirectory, '');
-    const paths = path.split(/\\|\//);
+    const paths = path.split(sep);
     let wk = '';
     for (const p of paths) {
       wk += p;
@@ -105,7 +112,13 @@ export class ExplorerComponent implements OnInit {
         continue;
       }
       let wk = treeFile.path.replace(this.treeExplorer.workDirectory, '');
-      wk = wk.replace(/\\|\//g, '') + treeFile.name;
+      let reg: RegExp;
+      if (sep === '\\') {
+        reg = new RegExp('\\\\', 'g');
+      } else {
+        reg = new RegExp('\\/', 'g');
+      }
+      wk = wk.replace(reg, '') + treeFile.name;
       for (const path of paths) {
         if (path === wk) {
           treeFile.opened = true;
@@ -124,12 +137,17 @@ export class ExplorerComponent implements OnInit {
     if (dir === '') {
       return;
     }
-    this.treeExplorer = this.fileManager.find(dir);
+    this.searchedDrectoryCnt = 5;
+    this.treeExplorer = this.fileManager.find(dir, this.searchedDrectoryCnt);
     if (this.fileManager.isStatFile(this.treeExplorer.workDirectory + sep + 'style.css')) {
-      document.getElementById('cs_viewer')['href'] = `${this.treeExplorer.workDirectory}${sep}style.css`;
+      document.getElementById('cs_viewer')['href'] = `${this.treeExplorer.workDirectory}${sep}style.css#` + new Date().getTime();
     }
     const appconfig = new AppConfig(this.es);
     appconfig.setWorkDirectory(this.treeExplorer.workDirectory);
+    this.selectFileInfo = new SelectFileInfo();
+    this.selectFileInfo.reWorkSpaceFlg = true;
+    this.shareDataService.onNotifySelectFileInfoChanged(this.selectFileInfo);
+    this.fswatch$();
   }
 
   /**
@@ -143,6 +161,15 @@ export class ExplorerComponent implements OnInit {
 
   folerOnOff(tree: TreeFiles) {
     tree.opened = !tree.opened;
+    // console.log(`${this.searchedDrectoryCnt} / ${tree.depth}`);
+    // if (this.searchedDrectoryCnt < tree.depth) {
+    //   this.treeExplorer = this.fileManager.find(this.treeExplorer.workDirectory, tree.depth + 1);
+    //   this.searchedDrectoryCnt = tree.depth;
+    // }
+    this.fileManager.reloadWorkDirectory(this.treeExplorer.workDirectory, this.treeExplorer, tree.depth + 1, callTree => {
+      this.treeExplorer = callTree;
+      this.searchedDrectoryCnt = tree.depth + 1;
+    });
   }
 
   onRightClick(tree: TreeFiles): void {
@@ -347,7 +374,7 @@ export class ExplorerComponent implements OnInit {
     if (this.fileManager.isStatFile(this.treeExplorer.workDirectory + sep + 'style.css')) {
       document.getElementById('cs_viewer')['href'] = `${this.treeExplorer.workDirectory}${sep}style.css#` + new Date().getTime();
     }
-    this.fileManager.reloadWorkDirectory(this.treeExplorer.workDirectory, this.treeExplorer, tree => { this.treeExplorer = tree; });
+    this.fileManager.reloadWorkDirectory(this.treeExplorer.workDirectory, this.treeExplorer, this.searchedDrectoryCnt, tree => { this.treeExplorer = tree; });
   }
 
   closeFolder(): void {
@@ -475,5 +502,25 @@ export class ExplorerComponent implements OnInit {
       element.classList.remove('mouse-over');
       this.lastHover = '';
     }
+  }
+
+  private fswatch$(): void {
+    if (this.fsWatcher) {
+      this.fsWatcher.close();
+      this.fsWatcher = undefined;
+    }
+    const stat = this.fileManager.getFsStat(this.treeExplorer.workDirectory);
+    if (!(stat && stat.isDirectory())) {
+      return;
+    }
+    this.fsWatcher = this.es.fs.watch(this.treeExplorer.workDirectory, { persistent: true, recursive: true }, (eventType, fileName) => {
+      console.log(`${eventType}:${fileName}`);
+      if (eventType === 'change') {
+        if (fileName !== 'style.css') {
+          return;
+        }
+      }
+      this.monitoringExplorer();
+    });
   }
 }
