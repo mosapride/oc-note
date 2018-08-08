@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, OnInit, ViewChild, Input, Output, EventEmitter } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, ViewChild, Input, Output, EventEmitter, NgZone } from '@angular/core';
 import * as hljs from 'highlight.js';
 import * as marked from 'marked';
 import { sep as sep } from 'path';
@@ -6,6 +6,7 @@ import { FileManager } from '../file-manager';
 import { ElectronService } from '../providers/electron.service';
 import { SelectFileInfo, ShareDataService } from '../share-data.service';
 import { MarkedHistory } from './marked-history';
+import { MenuItem } from 'electron';
 
 @Component({
   selector: 'app-marked',
@@ -105,10 +106,11 @@ export class MarkedComponent implements OnInit {
     }
   }
 
-  constructor(public es: ElectronService, public shareDataService: ShareDataService) {
+  constructor(public es: ElectronService, public shareDataService: ShareDataService, private ngZone: NgZone) {
     this.wideFlgChange = new EventEmitter();
     this.fileManager = new FileManager(es);
     this.history = new MarkedHistory(shareDataService);
+
 
     this.markRender.heading = (text: string, level: number, raw: string): string => {
       const buffer = new Buffer(text);
@@ -247,6 +249,22 @@ export class MarkedComponent implements OnInit {
   onDrop(evt) {
     evt.preventDefault();
     evt.stopPropagation();
+  }
+
+
+  rightClickOnDirectory(): void {
+    const menu = new this.es.remote.Menu();
+    const menuItem = this.es.remote.MenuItem;
+    menu.append(new menuItem({
+      label: 'html -> clipbord', click: () => {
+        this.ngZone.run(() => {
+          this.es.remote.clipboard.writeText(this.html);
+        });
+      }
+    }));
+    menu.popup({
+      window: this.es.remote.getCurrentWindow()
+    });
   }
 
 }

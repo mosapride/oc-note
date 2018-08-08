@@ -7,6 +7,8 @@
     "name": "mosapride",
     "email": "mosapride01@gmail.com"
   },
+  "linece": "MIT",
+  "repository": "https://github.com/mosapride/oc-note",
   "keywords": [
     "angular",
     "angular 6",
@@ -36,7 +38,8 @@
     "electron:windows": "npm run build:prod && npx electron-builder build --windows",
     "electron:mac": "npm run build:prod && npx electron-builder build --mac",
     "test": "npm run postinstall:web && ng test",
-    "e2e": "npm run postinstall:web && ng e2e"
+    "e2e": "npm run postinstall:web && ng e2e",
+    "b" : "electron-builder build --windows"
   },
   "dependencies": {
     "@angular/animations": "^6.0.9",

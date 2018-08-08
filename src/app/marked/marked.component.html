@@ -10,6 +10,6 @@
       </svg>
     </div>
   </div>
-  <div #contents class="contents" [innerHTML]='html | noSanitize'  (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)" (drop)="onDrop($event)">
+  <div #contents class="contents" (contextmenu)="rightClickOnDirectory()" [innerHTML]='html | noSanitize'  (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)" (drop)="onDrop($event)">
   </div>
 </div>
