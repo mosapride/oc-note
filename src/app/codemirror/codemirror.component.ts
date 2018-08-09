@@ -68,13 +68,11 @@ export class CodemirrorComponent implements AfterContentInit, OnDestroy {
       } catch (e) {
         return;
       }
-      console.log(imageFile);
     });
 
 
     this.shareDataService.selectFileInfo$.subscribe(
       selectFileInfo => {
-        console.log(selectFileInfo);
 
         if (this.timeoutInstance !== null) {
           clearTimeout(this.timeoutInstance);
@@ -115,10 +113,6 @@ export class CodemirrorComponent implements AfterContentInit, OnDestroy {
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
-  }
-
-  test(event: any) {
-    console.log(event);
   }
 
   /**

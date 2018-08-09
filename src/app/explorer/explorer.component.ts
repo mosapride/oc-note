@@ -161,7 +161,6 @@ export class ExplorerComponent implements OnInit {
 
   folerOnOff(tree: TreeFiles) {
     tree.opened = !tree.opened;
-    // console.log(`${this.searchedDrectoryCnt} / ${tree.depth}`);
     // if (this.searchedDrectoryCnt < tree.depth) {
     //   this.treeExplorer = this.fileManager.find(this.treeExplorer.workDirectory, tree.depth + 1);
     //   this.searchedDrectoryCnt = tree.depth;
@@ -438,8 +437,6 @@ export class ExplorerComponent implements OnInit {
   }
 
   onDrop(event: DragEvent, element: any, tree: TreeFiles) {
-    console.log(event);
-    console.log(`onDrop ${tree.name}`);
     this.lastHover = '';
     if (element.classList.contains('mouse-over')) {
       element.classList.remove('mouse-over');
@@ -450,7 +447,6 @@ export class ExplorerComponent implements OnInit {
       this.dialog.error('Same file', 'The same file name exists.');
       return;
     }
-    console.log(`${this.dragFile} -> ${tree.path + sep + tree.name}`);
     this.es.fs.rename(oldFile, newFile, (err) => {
       if (err) {
         return;
@@ -460,13 +456,11 @@ export class ExplorerComponent implements OnInit {
   }
 
   onDragStart(event: DragEvent, tree: TreeFiles) {
-    console.log(`onDragStart ${tree.name}`);
     this.dragFile = { path: tree.path, sep: sep, name: tree.name };
     // event.preventDefault();
   }
 
   onDragOver(element: any, event: DragEvent, tree: TreeFiles) {
-    console.log(`onDragOver ${tree.name}`);
     if (!element.classList.contains('mouse-over')) {
       element.classList.add('mouse-over');
     }
@@ -475,18 +469,15 @@ export class ExplorerComponent implements OnInit {
   }
 
   onDrag(event: DragEvent, tree: TreeFiles) {
-    console.log(`onDrag ${tree.name}`);
     event.preventDefault();
   }
 
   onDragEnd(event: DragEvent, tree: TreeFiles) {
-    console.log(`onDragEnd ${tree.name}`);
     event.preventDefault();
   }
 
 
   onDragChangeColor(element: any, tree: TreeFiles, flg: boolean): void {
-    console.log(`onDragChangeColor = ${flg}`);
     if (flg) {
       element.classList.add('mouse-over');
       if (this.hoverTimer) {
@@ -514,7 +505,6 @@ export class ExplorerComponent implements OnInit {
       return;
     }
     this.fsWatcher = this.es.fs.watch(this.treeExplorer.workDirectory, { persistent: true, recursive: true }, (eventType, fileName) => {
-      console.log(`${eventType}:${fileName}`);
       if (eventType === 'change') {
         if (fileName !== 'style.css') {
           return;
