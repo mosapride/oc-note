@@ -130,6 +130,9 @@ export class MarkedComponent implements OnInit {
       let cssClazzName = 'internal-link';
       let markfile = href.replace(/\//g, sep);
       markfile = this.selectFileInfo.path + sep + markfile;
+      if (!markfile.match(/\.md$/)) {
+        cssClazzName += ' external-app';
+      }
       if (!this.fileManager.isStatFile(markfile)) {
         cssClazzName += ' no-link';
       }
@@ -208,7 +211,6 @@ export class MarkedComponent implements OnInit {
 
   changeWideFlg(): void {
     this.wideFlg = !this.wideFlg;
-    console.log(`maked   ${this.wideFlg}`);
     this.wideFlgChange.emit(this.wideFlg);
   }
 
@@ -237,7 +239,6 @@ export class MarkedComponent implements OnInit {
       this.contents.nativeElement.scrollTop = this.contents.nativeElement.scrollHeight;
     }
     this.scrollDownFlg = !this.scrollDownFlg;
-    console.log(this.contents);
   }
 
   onDragOver(evt) {

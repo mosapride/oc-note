@@ -67,6 +67,11 @@ body {
 
 .internal-link {
   color: -webkit-link;
+  &.external-app {
+    &::after {
+      content: "→";
+    }
+  }
 }
 
 .no-link {
