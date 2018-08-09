@@ -98,6 +98,10 @@ export class MarkedComponent implements OnInit {
         window.alert(`not found.\n${event.target.dataset.inlink}`);
         return;
       }
+      if (!href.match(/\.md$/)) {
+        this.es.shell.openItem(href);
+        return;
+      }
       const selectFileInfo = new SelectFileInfo();
       selectFileInfo.customConstractor(href);
       this.shareDataService.onNotifySelectFileInfoChanged(selectFileInfo);
