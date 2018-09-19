@@ -1,4 +1,4 @@
-import { Component, ElementRef, NgZone, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, NgZone, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { sep } from 'path';
 import { MatDialog } from '../../../node_modules/@angular/material';
@@ -16,7 +16,8 @@ import { FSWatcher } from 'fs';
   templateUrl: './explorer.component.html',
   styleUrls: ['./explorer.component.scss']
 })
-export class ExplorerComponent implements OnInit {
+export class ExplorerComponent implements OnInit, AfterViewInit {
+
   search = '';
   isSetting = false;
   fileManager: FileManager;
@@ -69,12 +70,24 @@ export class ExplorerComponent implements OnInit {
       }
       this.openFolder(wd);
       this.fswatch$();
+
     }
     this.selectedHightTheme = appConfig.getHightTheme();
     document.getElementById('cs_highlight')['href'] = `assets/highlight.js/styles/${this.selectedHightTheme}`;
     this.selectedCodemirrortheme = appConfig.getCodemirrorTheme();
   }
 
+  ngAfterViewInit(): void {
+    if (this.fileManager.isStatFile(this.treeExplorer.workDirectory + sep + 'index.md')) {
+      for (const w of this.treeExplorer.childTree) {
+        if (w.name === 'index.md') {
+          setTimeout(() => {
+            this.openFile(w);
+          }, 100);
+        }
+      }
+    }
+  }
   clickSetting(): void {
     this.isSetting = !this.isSetting;
     if (this.isSetting) {
