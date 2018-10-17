@@ -21,7 +21,9 @@ main.ts
 win.webContents.openDevTools();
 ````
 
-### build
+### 実行ファイル(exe)作成
+
+VS Codeを開いた状態だと、ディレクトリを掴んだ状態になるためコマンドプロンプトのみを立ち上げ下記コマンドを実行する
 
 ```bash
 npm run electron:windows
