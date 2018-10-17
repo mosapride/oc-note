@@ -158,7 +158,16 @@ export class CodemirrorComponent implements AfterContentInit, OnDestroy {
    */
   private onChangeTextArea(): void {
     this.shareDataService.onNotifyMarkdownDataChanged(this.getCode());
-
+    if (this.selectFileInfo.reWorkSpaceFlg) {
+      setTimeout(() => {
+        this.selectFileInfo.reWorkSpaceFlg = false;
+      }, 1000);
+      if (this.timeoutInstance !== null) {
+        clearInterval(this.timeoutInstance);
+        this.timeoutInstance = null;
+      }
+      return;
+    }
     if (this.timeoutInstance !== null) {
       clearInterval(this.timeoutInstance);
       this.timeoutInstance = null;

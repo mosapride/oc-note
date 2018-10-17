@@ -526,4 +526,16 @@ export class ExplorerComponent implements OnInit, AfterViewInit {
       this.monitoringExplorer();
     });
   }
+
+  goHome() {
+    if (this.fileManager.isStatFile(this.treeExplorer.workDirectory + sep + 'index.md')) {
+      for (const w of this.treeExplorer.childTree) {
+        if (w.name === 'index.md') {
+          setTimeout(() => {
+            this.openFile(w);
+          }, 100);
+        }
+      }
+    }
+  }
 }

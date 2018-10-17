@@ -21,6 +21,12 @@ main.ts
 win.webContents.openDevTools();
 ````
 
+### build
+
+```bash
+npm run electron:windows
+```
+
 ## The main framework you are using
 
 * [maximegris/angular-electron](https://github.com/maximegris/angular-electron)
