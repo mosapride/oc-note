@@ -159,6 +159,7 @@ export class ExplorerComponent implements OnInit, AfterViewInit {
     appconfig.setWorkDirectory(this.treeExplorer.workDirectory);
     this.selectFileInfo = new SelectFileInfo();
     this.selectFileInfo.reWorkSpaceFlg = true;
+    this.selectFileInfo.name = '';
     this.shareDataService.onNotifySelectFileInfoChanged(this.selectFileInfo);
     this.fswatch$();
   }
