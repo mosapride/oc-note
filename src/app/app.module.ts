@@ -1,4 +1,3 @@
-import 'zone.js/dist/zone-mix';
 import 'reflect-metadata';
 import '../polyfills';
 import { BrowserModule } from '@angular/platform-browser';
@@ -27,6 +26,7 @@ import { NoSanitizePipe } from './no-sanitize.pipe';
 import { DialogComponent } from './dialog/dialog.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 
 // AoT requires an exported function for factories
@@ -55,6 +55,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     HttpClientModule,
     AppRoutingModule,
     MatDialogModule,
+    MatSnackBarModule,
     BrowserAnimationsModule,
     TranslateModule.forRoot({
       loader: {

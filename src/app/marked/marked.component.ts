@@ -25,6 +25,7 @@ export class MarkedComponent implements OnInit {
   public selectFileInfo: SelectFileInfo;
   public history: MarkedHistory;
   public scrollDownFlg = false;
+  timeoutInstance: NodeJS.Timer = null;
 
   public markOtion: marked.MarkedOptions = {
     highlight: function (str, lang) {
@@ -117,7 +118,7 @@ export class MarkedComponent implements OnInit {
 
 
     this.markRender.heading = (text: string, level: number, raw: string): string => {
-      const buffer = new Buffer(text);
+      const buffer = Buffer.from(text);
       const id = buffer.toString('base64');
       return `<h${level} id='${id}'>${text}</h${level}>\n`;
     };
@@ -199,7 +200,17 @@ export class MarkedComponent implements OnInit {
     this.shareDataService.markdownData$.subscribe(
       markdown => {
         this.markdown = markdown;
-        this.html = marked(markdown, this.markOtion);
+
+        if (this.timeoutInstance !== null) {
+          clearInterval(this.timeoutInstance);
+          this.timeoutInstance = null;
+        }
+
+        this.timeoutInstance = setTimeout(() => {
+          this.html = marked(markdown, this.markOtion);
+          this.timeoutInstance = null;
+        }, 500);
+
         if (this.scrollDownFlg) {
           setTimeout(() => {
             this.contents.nativeElement.scrollTop = this.contents.nativeElement.scrollHeight;

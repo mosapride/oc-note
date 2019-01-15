@@ -1,4 +1,5 @@
 import { Component, ViewChild, ElementRef, AfterContentInit, OnDestroy } from '@angular/core';
+import { MatSnackBar } from '@angular/material';
 import * as codetype from 'codemirror';
 import { ShareDataService, SelectFileInfo } from '../share-data.service';
 import { Subscription } from 'rxjs';
@@ -17,6 +18,7 @@ declare var CodeMirror: typeof codetype;
 export class CodemirrorComponent implements AfterContentInit, OnDestroy {
   @ViewChild('codemirror') codemirror: ElementRef;
   @ViewChild('repletion') repletion: ElementRef;
+  @ViewChild('toast') toast: ElementRef;
   viewerSep: string;
   private subscription: Subscription;
   markdown: string;
@@ -29,7 +31,8 @@ export class CodemirrorComponent implements AfterContentInit, OnDestroy {
   timeoutInstance: NodeJS.Timer = null;
   selectedCodemirrortheme: string;
   lineWrappingFlg: boolean;
-  constructor(public es: ElectronService, public shareDataService: ShareDataService) {
+  toastMessage = 'save';
+  constructor(public es: ElectronService, public shareDataService: ShareDataService, public snackBar: MatSnackBar) {
     this.hightlightTheme = new Constant().highlightTheme;
     this.fileManager = new FileManager(es);
     this.selectedCodemirrortheme = new AppConfig(es).getCodemirrorTheme();
@@ -47,6 +50,7 @@ export class CodemirrorComponent implements AfterContentInit, OnDestroy {
       viewportMargin: Infinity,
       extraKeys: {
         'Enter': 'newlineAndIndentContinueMarkdownList',
+        'Ctrl-S': () => this.save()
       },
     });
 
@@ -158,6 +162,45 @@ export class CodemirrorComponent implements AfterContentInit, OnDestroy {
    */
   private onChangeTextArea(): void {
     this.shareDataService.onNotifyMarkdownDataChanged(this.getCode());
+    // if (this.selectFileInfo.reWorkSpaceFlg) {
+    //   setTimeout(() => {
+    //     this.selectFileInfo.reWorkSpaceFlg = false;
+    //   }, 1000);
+    //   if (this.timeoutInstance !== null) {
+    //     clearInterval(this.timeoutInstance);
+    //     this.timeoutInstance = null;
+    //   }
+    //   return;
+    // }
+    // if (this.timeoutInstance !== null) {
+    //   clearInterval(this.timeoutInstance);
+    //   this.timeoutInstance = null;
+    // }
+
+    // if (!this.selectFileInfo) {
+    //   return;
+    // }
+
+    // this.timeoutInstance = setTimeout(() => {
+    //   if (!this.selectFileInfo) {
+    //     return;
+    //   }
+    //   if (this.selectFileInfo.name === undefined || this.selectFileInfo.name === '') {
+    //     return;
+    //   }
+    //   if (this.saveFileLastName !== this.selectFileInfo.getFullPathFilename()) {
+    //     this.saveFileLastName = this.selectFileInfo.getFullPathFilename();
+    //     return;
+    //   }
+    //   this.fileManager.save(this.selectFileInfo.getFullPathFilename(), this.getCode(), this.callbackSaved);
+    //   this.timeoutInstance = null;
+    // }, this.SAVE_DELAY);
+
+  }
+
+  private save(): void {
+
+
     if (this.selectFileInfo.reWorkSpaceFlg) {
       setTimeout(() => {
         this.selectFileInfo.reWorkSpaceFlg = false;
@@ -188,13 +231,25 @@ export class CodemirrorComponent implements AfterContentInit, OnDestroy {
         this.saveFileLastName = this.selectFileInfo.getFullPathFilename();
         return;
       }
-      this.fileManager.save(this.selectFileInfo.getFullPathFilename(), this.getCode(), this.callbackSaved);
+      console.log('run save');
+      this.fileManager.save(this.selectFileInfo.getFullPathFilename(), this.getCode(), this.callbackSaved.bind(this));
       this.timeoutInstance = null;
     }, this.SAVE_DELAY);
-
   }
 
   private callbackSaved(): void {
+    this.toastShow();
+  }
 
+  private toastHide() {
+    this.toast.nativeElement.style.opacity = 0;
+    window.setTimeout(() => this.toast.nativeElement.style.zIndex = 0, 400);
+  }
+
+  private toastShow() {
+    this.toast.nativeElement.style.opacity = 1;
+    this.toast.nativeElement.style.zIndex = 9999;
+    window.setTimeout(() => this.toastHide(), 2500);
   }
 }
+
